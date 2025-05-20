@@ -1,0 +1,243 @@
+{
+  "categories": [
+    {
+      "name": "Besoins",
+      "icon": "mdi:campfire",
+      "buildings": [
+        {
+          "name": "Feu de camp",
+          "code": "campfire",
+          "icon": "mdi:campfire",
+          "cost": { "gold": 30 }
+        },
+        {
+          "name": "Abri de stockage",
+          "code": "storage_shelter",
+          "icon": "mdi:warehouse",
+          "cost": { "gold": 200 },
+          "requires": {
+            "buildings": ["stone_quarry"]
+          }
+        },
+        {
+          "name": "Puits rudimentaire",
+          "code": "primitive_well",
+          "icon": "mdi:water-well",
+          "cost": { "gold": 150 },
+          "requires": {
+            "buildings": ["pottery_workshop"]
+          }
+        },
+        {
+          "name": "Cabane du chasseur",
+          "code": "hunting_traps",
+          "icon": "mdi:paw",
+          "cost": { "gold": 50 },
+          "requires": {
+            "buildings": ["branch_hut"]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Logement",
+      "icon": "mdi:home",
+      "buildings": [
+        {
+          "name": "Hutte en branchages",
+          "code": "branch_hut",
+          "icon": "game-icons:hut",
+          "cost": { "gold": 120 },
+          "requires": {
+            "buildings": ["campfire"]
+          }
+        },
+        {
+          "name": "Abri en peaux",
+          "code": "leather_shelter",
+          "icon": "mdi:tent",
+          "cost": { "gold": 300 },
+          "requires": {
+            "buildings": ["campfire", "knowledge_stone"],
+            "resources": { "leather": 10 }
+          }
+        },
+        {
+          "name": "Maison familial",
+          "code": "family_house",
+          "icon": "mdi:home-group",
+          "cost": { "gold": 600 },
+          "requires": {
+            "buildings": ["campfire", "experimental_lab"],
+            "resources": { "pottery": 20 }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Industries",
+      "icon": "mdi:hammer-wrench",
+      "buildings": [
+        {
+          "name": "Carrière de pierre",
+          "code": "stone_quarry",
+          "icon": "mdi:mountain",
+          "cost": { "gold": 800 },
+          "requires": {
+            "buildings": ["branch_hut"]
+          }
+        },
+        {
+          "name": "Tailleur de pierre",
+          "code": "stonecutter",
+          "icon": "mdi:anvil",
+          "cost": { "gold": 400 },
+          "requires": {
+            "buildings": ["storage_shelter", "stone_quarry"],
+            "resources": { "stone": 10 }
+          }
+        },
+        {
+          "name": "Fosse de tannage",
+          "code": "tanning_pit",
+          "icon": "game-icons:animal-hide",
+          "cost": { "gold": 350 },
+          "requires": {
+            "buildings": ["storage_shelter", "hunting_traps"],
+            "resources": { "meat": 5 }
+          }
+        },
+        {
+          "name": "Scierie rudimentaire",
+          "code": "basic_sawmill",
+          "icon": "mdi:saw-blade",
+          "cost": { "gold": 750 },
+          "requires": {
+            "buildings": ["storage_shelter", "stone_circle"],
+            "resources": { "stoneTools": 10 }
+          }
+        },
+        {
+          "name": "Atelier de poterie",
+          "code": "pottery_workshop",
+          "icon": "mdi:pot",
+          "cost": { "gold": 1200 },
+          "requires": {
+            "buildings": ["storage_shelter", "experimental_lab"],
+            "resources": { "processedWood": 10 }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Production",
+      "icon": "mdi:leaf",
+      "buildings": [
+        {
+          "name": "Zone de cueillette",
+          "code": "gathering_area",
+          "icon": "mdi:fruit-cherries",
+          "cost": { "gold": 150 },
+          "requires": { "buildings": ["branch_hut"] }
+        },
+        {
+          "name": "Champ de racines",
+          "code": "root_field",
+          "icon": "mdi:carrot",
+          "cost": { "gold": 500 },
+          "requires": { "buildings": ["leather_shelter"] }
+        },
+        {
+          "name": "Ferme primitive",
+          "code": "primitive_farm",
+          "icon": "mdi:grain",
+          "cost": { "gold": 1000 },
+          "requires": { "buildings": ["primitive_well", "family_house"] }
+        }
+      ]
+    },
+    {
+      "name": "Religion",
+      "icon": "mdi:meditation",
+      "buildings": [
+        {
+          "name": "Totem en bois",
+          "code": "wood_totem",
+          "icon": "game-icons:totem",
+          "cost": { "gold": 250 },
+          "requires": { "resources": { "processedWood": 5 } }
+        },
+        {
+          "name": "Cercle de pierres",
+          "code": "stone_circle",
+          "icon": "mdi:circle",
+          "cost": { "gold": 600 },
+          "requires": { "resources": { "stoneTools": 10 } }
+        },
+        {
+          "name": "Autel de rituels",
+          "code": "ritual_altar",
+          "icon": "mdi:lectern",
+          "cost": { "gold": 1000 },
+          "requires": {
+            "buildings": ["wood_totem", "stone_circle"],
+            "resources": { "faith": 100 }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Défenses",
+      "icon": "mdi:shield",
+      "buildings": [
+        {
+          "name": "Palissade en bois",
+          "code": "wooden_wall",
+          "icon": "mdi:fence",
+          "cost": { "gold": 500 },
+          "requires": { "buildings": ["knowledge_stone"] }
+        },
+        {
+          "name": "Tour de guet",
+          "code": "watchtower",
+          "icon": "mdi:binoculars",
+          "cost": { "gold": 800 },
+          "requires": { "buildings": ["knowledge_stone"] }
+        },
+        {
+          "name": "Caserne",
+          "code": "barracks",
+          "icon": "mdi:shield-sword",
+          "cost": { "gold": 350 },
+          "requires": { "buildings": ["experimental_lab"] }
+        }
+      ]
+    },
+    {
+      "name": "Recherche",
+      "icon": "mdi:book-open-variant",
+      "buildings": [
+        {
+          "name": "Pierre des savoirs",
+          "code": "knowledge_stone",
+          "icon": "mdi:necklace",
+          "cost": { "gold": 5000 },
+          "requires": {
+            "buildings": ["ritual_altar"],
+            "resources": { "faith": 20 }
+          }
+        },
+        {
+          "name": "Atelier expérimental",
+          "code": "experimental_lab",
+          "icon": "mdi:scroll",
+          "cost": { "gold": 10000 },
+          "requires": {
+            "buildings": ["ritual_altar", "knowledge_stone"],
+            "resources": { "faith": 50 }
+          }
+        }
+      ]
+    }
+  ]
+}
