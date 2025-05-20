@@ -60,6 +60,14 @@ function confirmRestart() {
   mapStore.camera.y = 0;
 
   showModal.value = false;
+
   console.log("🔄 Game restarted!");
+
+  setTimeout(() => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("seenTutorialSteps");
+      window.dispatchEvent(new Event("tutorial:reset"));
+    }
+  }, 1000);
 }
 </script>

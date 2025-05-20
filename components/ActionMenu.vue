@@ -1,7 +1,7 @@
 <template>
   <div
     ref="menuRef"
-    class="fixed top-[44px] right-0 h-full w-16 bg-[#4E3B31] flex flex-col items-center gap-2 p-2 z-50 border-l border-[#3B2A21]"
+    class="fixed top-[44px] right-0 h-full w-16 bg-[#4E3B31] flex flex-col items-center gap-2 p-2 z-30 border-l border-[#3B2A21]"
   >
     <button
       v-for="category in categories"

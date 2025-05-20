@@ -58,7 +58,7 @@
           "icon": "mdi:tent",
           "cost": { "gold": 300 },
           "requires": {
-            "buildings": ["campfire", "knowledge_stone"],
+            "buildings": ["campfire", "stone_circle"],
             "resources": { "leather": 10 }
           }
         },
@@ -84,7 +84,7 @@
           "icon": "mdi:mountain",
           "cost": { "gold": 800 },
           "requires": {
-            "buildings": ["branch_hut"]
+            "buildings": ["branch_hut", "hunting_traps"]
           }
         },
         {
@@ -94,7 +94,7 @@
           "cost": { "gold": 400 },
           "requires": {
             "buildings": ["storage_shelter", "stone_quarry"],
-            "resources": { "stone": 10 }
+            "resources": { "stone": 5 }
           }
         },
         {
@@ -113,7 +113,7 @@
           "icon": "mdi:saw-blade",
           "cost": { "gold": 750 },
           "requires": {
-            "buildings": ["storage_shelter", "stone_circle"],
+            "buildings": ["storage_shelter", "knowledge_stone"],
             "resources": { "stoneTools": 10 }
           }
         },
@@ -165,14 +165,14 @@
           "code": "wood_totem",
           "icon": "game-icons:totem",
           "cost": { "gold": 250 },
-          "requires": { "resources": { "processedWood": 5 } }
+          "requires": { "resources": { "processedWood": 10 } }
         },
         {
           "name": "Cercle de pierres",
           "code": "stone_circle",
           "icon": "mdi:circle",
           "cost": { "gold": 600 },
-          "requires": { "resources": { "stoneTools": 10 } }
+          "requires": { "resources": { "stoneTools": 15 } }
         },
         {
           "name": "Autel de rituels",
@@ -180,7 +180,7 @@
           "icon": "mdi:lectern",
           "cost": { "gold": 1000 },
           "requires": {
-            "buildings": ["wood_totem", "stone_circle"],
+            "buildings": ["wood_totem"],
             "resources": { "faith": 100 }
           }
         }
@@ -221,9 +221,9 @@
           "name": "Pierre des savoirs",
           "code": "knowledge_stone",
           "icon": "mdi:necklace",
-          "cost": { "gold": 5000 },
+          "cost": { "gold": 2000 },
           "requires": {
-            "buildings": ["ritual_altar"],
+            "buildings": ["stone_circle"],
             "resources": { "faith": 20 }
           }
         },
@@ -231,9 +231,9 @@
           "name": "Atelier expérimental",
           "code": "experimental_lab",
           "icon": "mdi:scroll",
-          "cost": { "gold": 10000 },
+          "cost": { "gold": 5000 },
           "requires": {
-            "buildings": ["ritual_altar", "knowledge_stone"],
+            "buildings": ["ritual_altar"],
             "resources": { "faith": 50 }
           }
         }

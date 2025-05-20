@@ -14,6 +14,8 @@
 
     <ResourcePanel />
 
+    <TutorialOverlay />
+
     <!-- Zone principale (Grille de jeu) -->
     <main
       class="flex-grow flex items-center justify-center mt-[44px] mr-[64px]"

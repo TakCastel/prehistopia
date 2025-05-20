@@ -55,8 +55,8 @@ export const useResourceStore = defineStore(
       defensive_trench: {},
 
       // Recherche
-      knowledge_stone: { faith: 2, gold: -500 },
-      experimental_lab: { stoneTools: 2, gold: -1000 },
+      knowledge_stone: { faith: 2, gold: -200 },
+      experimental_lab: { stoneTools: 2, gold: -500 },
     };
 
     let incomeStarted = false;
@@ -124,15 +124,15 @@ export const useResourceStore = defineStore(
         inactiveBuildings.value = {}; // 🧹 reset propre
 
         const popDependentBuildings = [
-          "hunting_traps",
           "stone_quarry",
-          "stonecutter",
-          "tanning_pit",
-          "pottery_workshop",
-          "basic_sawmill",
-          "gathering_area",
           "primitive_farm",
+          "basic_sawmill",
           "root_field",
+          "pottery_workshop",
+          "gathering_area",
+          "tanning_pit",
+          "hunting_traps",
+          "stonecutter",
         ];
 
         for (let y = 0; y < map.length; y++) {
