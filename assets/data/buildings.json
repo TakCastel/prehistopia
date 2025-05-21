@@ -429,7 +429,7 @@
             "stoneTools": 2,
             "gold": -500
           },
-          "description": "Laboratoire de recherche. Nécessite un autel de rituels et beaucoup de dévotion. (Ne peut être construit qu'une fois)"
+          "description": "Laboratoire de recherche. Débloque les bâtiments du dernier âge. (Ne peut être construit qu'une fois)"
         }
       ]
     }
