@@ -52,14 +52,14 @@
           "code": "hunting_traps",
           "icon": "mdi:paw",
           "cost": {
-            "gold": 200
+            "gold": 50
           },
           "requires": {
             "buildings": ["branch_hut"]
           },
           "income": {
             "meat": 1,
-            "gold": -20
+            "gold": -5
           },
           "description": "Produit de la viande. Nécessite une hutte. Requis pour la fosse de tannage."
         }
