@@ -238,7 +238,7 @@
             "medicinalHerbs": 3,
             "gold": -15
           },
-          "description": "Zone pour cueillir des herbes. Nécessite une hutte basique."
+          "description": "Zone pour cueillir des herbes. Nécessite une hutte basique, ne peut se construire que dans les collines."
         },
         {
           "name": "Champ de racines",
@@ -254,7 +254,7 @@
             "roots": 5,
             "gold": -50
           },
-          "description": "Produit des racines comestibles. Requiert un abri en peaux."
+          "description": "Produit des racines comestibles. Requiert un abri en peaux, ne peut se construire que dans les collines."
         },
         {
           "name": "Ferme primitive",
@@ -270,7 +270,7 @@
             "wheat": 10,
             "gold": -100
           },
-          "description": "Produit du blé. Nécessite un puits et une maison familiale."
+          "description": "Produit du blé. Requiert une maison familiale et se construit autour d'un puits."
         }
       ]
     },
@@ -404,7 +404,7 @@
             "faith": 2,
             "gold": -200
           },
-          "description": "Source de savoir. Débloque les défenses et autres bâtiments."
+          "description": "Source de savoir. Débloque la scierie et les défenses. (Ne peut être construit qu'une fois)"
         },
         {
           "name": "Atelier expérimental",
@@ -423,7 +423,7 @@
             "stoneTools": 2,
             "gold": -500
           },
-          "description": "Laboratoire de recherche. Nécessite un autel de rituels et beaucoup de foi."
+          "description": "Laboratoire de recherche. Nécessite un autel de rituels et beaucoup de dévotion. (Ne peut être construit qu'une fois)"
         }
       ]
     }

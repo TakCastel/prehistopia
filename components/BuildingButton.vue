@@ -14,16 +14,17 @@
       <Icon :name="building.icon" class="w-5 h-5" />
       <div class="flex flex-col">
         <span class="truncate text-sm">{{ building.name }}</span>
+        <template v-if="!isAlreadyBuilt(building.code)">
+          <BuildingRequirement
+            :requirements="unmetBuildingRequirements"
+            :get-building-name="getBuildingName"
+          />
 
-        <BuildingRequirement
-          :requirements="unmetBuildingRequirements"
-          :get-building-name="getBuildingName"
-        />
-
-        <BuildingCost
-          :building="building"
-          :get-resource-icon="getResourceIcon"
-        />
+          <BuildingCost
+            :building="building"
+            :get-resource-icon="getResourceIcon"
+          />
+        </template>
       </div>
     </button>
 
@@ -83,6 +84,14 @@ function getResourceIcon(resource) {
   return icons[resource] || "mdi:help-circle-outline";
 }
 
+function isAlreadyBuilt(code) {
+  const uniqueCodes = ["knowledge_stone", "experimental_lab"];
+  if (!uniqueCodes.includes(code)) return false;
+
+  const placed = mapStore.getPlacedBuildings?.() || [];
+  return placed.includes(code);
+}
+
 const unmetBuildingRequirements = computed(() => {
   const placed = mapStore.getPlacedBuildings?.() || [];
   return (
@@ -113,7 +122,11 @@ const hasPrerequisites = computed(
     hasRequiredResources(props.building.requires)
 );
 
-const isBuildable = computed(() => canAfford.value && hasPrerequisites.value);
+const isBuildable = computed(() => {
+  if (isAlreadyBuilt(props.building.code)) return false;
+  return canAfford.value && hasPrerequisites.value;
+});
+
 const isSelected = computed(
   () => mapStore.selectedBuilding === props.building.code
 );

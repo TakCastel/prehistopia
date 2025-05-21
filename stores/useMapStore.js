@@ -122,7 +122,6 @@ export const useMapStore = defineStore(
 
       ctx.fillStyle = terrainColors[cell?.terrainType] || "#3b3b3b";
 
-      // 🔴 Si un bâtiment est sélectionné, colore en rouge les cases invalides
       // 1. Fond de la case
       ctx.fillStyle = terrainColors[cell?.terrainType] || "#3b3b3b";
       ctx.fill();
@@ -398,6 +397,22 @@ export const useMapStore = defineStore(
 
             const neighbor = map.value[y + dy]?.[x + dx];
             if (neighbor?.building === "campfire") return true;
+          }
+        }
+        return false;
+      }
+
+      const restrictedToHills = ["gathering_area", "root_field"];
+      if (restrictedToHills.includes(selectedBuilding.value)) {
+        return cell.terrainType === "hills";
+      }
+
+      if (selectedBuilding.value === "primitive_farm") {
+        const range = 1;
+        for (let dy = -range; dy <= range; dy++) {
+          for (let dx = -range; dx <= range; dx++) {
+            const neighbor = map.value[y + dy]?.[x + dx];
+            if (neighbor?.building === "primitive_well") return true;
           }
         }
         return false;
