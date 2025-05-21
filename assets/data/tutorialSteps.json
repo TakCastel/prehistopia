@@ -62,5 +62,13 @@
     "image": "/images/tutorial/ruin_warning.png",
     "explanation": "Sans nourriture, vos colons fuient ou disparaissent. Plus la famine dure, plus les habitations s’effondrent. Il faut agir vite pour nourrir votre village.",
     "check": "ruin >= 1"
+  },
+  {
+    "id": "afterPrimitiveFarm",
+    "title": "Vers l'abondance",
+    "flavorText": "Un champ de blé s’étend désormais aux abords du village. Grâce au puits et à l’organisation mise en place, votre peuple produit enfin sa propre nourriture. La survie laisse place à la prospérité.",
+    "image": "/images/tutorial/primitive_farm.png",
+    "explanation": "Félicitations, vous avez accompli les étapes fondamentales pour assurer la survie et le développement de votre village. Vous pouvez maintenant continuer, ou recommencer pour bâtir une nouvelle colonie.",
+    "check": "primitive_farm >= 1"
   }
 ]
