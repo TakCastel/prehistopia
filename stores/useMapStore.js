@@ -4,6 +4,7 @@ import { loadImages, getImage } from "@/utils/imageLoader";
 import { generateMapData } from "@/utils/mapGenerator";
 import localforage from "localforage";
 import buildingsData from "@/assets/data/buildings.json";
+import { useAlertStore } from "@/stores/useAlertStore";
 
 const TILE_WIDTH = 64;
 const TILE_HEIGHT = 32;
@@ -64,6 +65,7 @@ export const useMapStore = defineStore(
         { name: "barracks", src: "/images/barracks.png" },
         { name: "knowledge_stone", src: "/images/knowledge_stone.png" },
         { name: "experimental_lab", src: "/images/experimental_lab.png" },
+        { name: "ruin", src: "/images/ruin.png" },
       ]);
 
       console.log("📦 Map state before loading from storage:", map.value);
@@ -96,6 +98,7 @@ export const useMapStore = defineStore(
 
       const resourceStore = useResourceStore();
       resourceStore.updatePopulation(map.value);
+      resourceStore.monitorFoodCrisis(map);
 
       ctx.restore();
     }
@@ -301,7 +304,8 @@ export const useMapStore = defineStore(
       }
 
       if (!isPlacementValid(x, y)) {
-        console.log("❌ Placement non valide selon les règles de proximité.");
+        useAlertStore().push("error", "Placement non valide");
+
         return false;
       }
 
@@ -318,7 +322,7 @@ export const useMapStore = defineStore(
       const totalCost = { ...resourceCosts, gold: goldCost };
 
       if (!resourceStore.canAfford(totalCost)) {
-        console.warn("❌ Pas assez de ressources !");
+        useAlertStore().push("error", "Pas assez de ressource");
         return false;
       }
 

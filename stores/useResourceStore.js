@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import buildingsData from "@/assets/data/buildings.json";
+import { useAlertStore } from "@/stores/useAlertStore";
 
 export const useResourceStore = defineStore(
   "resource",
@@ -9,55 +11,16 @@ export const useResourceStore = defineStore(
     const leather = ref(0);
     const processedWood = ref(0);
     const pottery = ref(0);
-    const wheat = ref(0);
+    const wheat = ref(10);
     const roots = ref(0);
     const medicinalHerbs = ref(0);
     const stone = ref(0);
-    const meat = ref(0);
+    const meat = ref(20);
     const faith = ref(0);
     const population = ref(0);
 
     const inactiveBuildings = ref({});
     const incomeInterval = 10 * 1000;
-
-    const incomeBuildings = {
-      // Besoins
-      campfire: { faith: 1, gold: -3 },
-      storage_shelter: { gold: -20 },
-      primitive_well: { gold: -15 },
-      hunting_traps: { meat: 1, gold: -5 },
-
-      // Logement
-      branch_hut: { gold: 50 },
-      leather_shelter: { gold: 150 },
-      family_house: { gold: 300 },
-
-      // Religion
-      wood_totem: { faith: 2, gold: -25 },
-      stone_circle: { faith: 4, gold: -60 },
-      ritual_altar: { faith: 8, gold: -100 },
-
-      // Industries
-      stone_quarry: { stone: 1, gold: -80 },
-      stonecutter: { stoneTools: 1, gold: -40 },
-      tanning_pit: { leather: 1, gold: -35 },
-      pottery_workshop: { pottery: 1, gold: -120 },
-      basic_sawmill: { processedWood: 1, gold: -75 },
-
-      // Production
-      gathering_area: { medicinalHerbs: 1, gold: -15 },
-      root_field: { roots: 1, gold: -50 },
-      primitive_farm: { wheat: 1, gold: -100 },
-
-      // Défenses
-      wooden_wall: {},
-      watchtower: { faith: 1 },
-      defensive_trench: {},
-
-      // Recherche
-      knowledge_stone: { faith: 2, gold: -200 },
-      experimental_lab: { stoneTools: 2, gold: -500 },
-    };
 
     let incomeStarted = false;
 
@@ -66,9 +29,9 @@ export const useResourceStore = defineStore(
     }
 
     function spendResources(cost) {
-      const canSpend = Object.entries(cost).every(([resource, amount]) => {
-        return resourceStore[resource]?.value >= amount;
-      });
+      const canSpend = Object.entries(cost).every(
+        ([resource, amount]) => resourceStore[resource]?.value >= amount
+      );
       if (!canSpend) return false;
 
       for (const [resource, amount] of Object.entries(cost)) {
@@ -78,9 +41,9 @@ export const useResourceStore = defineStore(
     }
 
     function canAfford(cost) {
-      return Object.entries(cost).every(([resource, amount]) => {
-        return resourceStore[resource]?.value >= amount;
-      });
+      return Object.entries(cost).every(
+        ([resource, amount]) => resourceStore[resource]?.value >= amount
+      );
     }
 
     function resetResources() {
@@ -89,16 +52,52 @@ export const useResourceStore = defineStore(
       leather.value = 0;
       processedWood.value = 0;
       pottery.value = 0;
-      wheat.value = 0;
+      wheat.value = 10;
       roots.value = 0;
       medicinalHerbs.value = 0;
       stone.value = 0;
-      meat.value = 0;
+      meat.value = 20;
       faith.value = 0;
     }
 
     function rewardForTreeChop() {
       addGold(3);
+    }
+
+    function getIncomeForBuilding(code) {
+      for (const category of buildingsData.categories) {
+        const building = category.buildings.find((b) => b.code === code);
+        if (building?.income) return building.income;
+      }
+      return null;
+    }
+
+    function consumeRandomResources() {
+      const foodResources = ["wheat", "roots", "meat", "medicinalHerbs"];
+
+      const consumptionLog = {};
+
+      for (let i = 0; i < population.value; i++) {
+        const options = foodResources.filter(
+          (res) => resourceStore[res]?.value > 0
+        );
+
+        if (options.length === 0) break;
+
+        const chosen = options[Math.floor(Math.random() * options.length)];
+        resourceStore[chosen].value -= 1;
+
+        consumptionLog[chosen] = (consumptionLog[chosen] || 0) + 1;
+      }
+
+      if (Object.keys(consumptionLog).length > 0) {
+        console.log(
+          "🍽️ Nourriture consommée par la population :",
+          consumptionLog
+        );
+      } else {
+        console.log("⚠️ Aucun aliment disponible à consommer.");
+      }
     }
 
     function startResourceIncome(mapRef) {
@@ -108,6 +107,7 @@ export const useResourceStore = defineStore(
         console.warn("⚠️ Income generation already started.");
         return;
       }
+
       incomeStarted = true;
 
       setInterval(() => {
@@ -121,7 +121,7 @@ export const useResourceStore = defineStore(
         const availablePop = population.value;
         let assignedPopulation = 0;
 
-        inactiveBuildings.value = {}; // 🧹 reset propre
+        inactiveBuildings.value = {};
 
         const popDependentBuildings = [
           "stone_quarry",
@@ -144,14 +144,13 @@ export const useResourceStore = defineStore(
               continue;
             }
 
-            const income = incomeBuildings[code];
+            const income = getIncomeForBuilding(code);
             if (!income) {
               cell.inactive = false;
               continue;
             }
 
             const requiresPop = popDependentBuildings.includes(code);
-
             if (requiresPop) {
               if (assignedPopulation >= availablePop) {
                 cell.inactive = true;
@@ -160,7 +159,7 @@ export const useResourceStore = defineStore(
               assignedPopulation++;
             }
 
-            cell.inactive = false; // ce bâtiment est actif
+            cell.inactive = false;
 
             for (const [resource, amount] of Object.entries(income)) {
               totalIncome[resource] = (totalIncome[resource] || 0) + amount;
@@ -175,6 +174,8 @@ export const useResourceStore = defineStore(
             console.warn(`⚠️ Resource "${resource}" not found in store.`);
           }
         }
+
+        consumeRandomResources();
       }, incomeInterval);
     }
 
@@ -198,6 +199,63 @@ export const useResourceStore = defineStore(
       population.value = total;
     }
 
+    let famineTimer = null;
+    let houseDestructionInterval = null;
+
+    function monitorFoodCrisis(mapRef) {
+      watchEffect(() => {
+        const totalFood = meat.value + roots.value + wheat.value;
+
+        if (totalFood === 0 && !famineTimer) {
+          useAlertStore().push(
+            "error",
+            "La famine frappe votre communauté, trouvez vite des sources de nourriture !"
+          );
+
+          famineTimer = setTimeout(() => {
+            startHouseDestructionLoop(mapRef);
+          }, 60 * 1000);
+        }
+
+        if (totalFood > 0) {
+          // Nourriture revenue : on annule les timers
+          clearTimeout(famineTimer);
+          clearInterval(houseDestructionInterval);
+          famineTimer = null;
+          houseDestructionInterval = null;
+        }
+      });
+    }
+
+    function startHouseDestructionLoop(mapRef) {
+      console.warn("☠️ Début des destructions de maisons.");
+
+      houseDestructionInterval = setInterval(async () => {
+        const map = mapRef.value;
+        const housingCodes = ["branch_hut", "leather_shelter", "family_house"];
+
+        for (const row of map) {
+          for (const cell of row) {
+            if (housingCodes.includes(cell.building)) {
+              cell.building = "ruin";
+
+              const mapStore = useMapStore();
+              await mapStore.saveMap();
+
+              useAlertStore().push(
+                "error",
+                "Un habitant a quitté votre village car il manquait de nourriture."
+              );
+              return; // une seule maison détruite par minute
+            }
+          }
+        }
+
+        console.warn("Aucune maison restante à détruire.");
+        clearInterval(houseDestructionInterval);
+      }, 60 * 1000);
+    }
+
     const resourceStore = {
       gold,
       stoneTools,
@@ -218,7 +276,9 @@ export const useResourceStore = defineStore(
       rewardForTreeChop,
       startResourceIncome,
       updatePopulation,
+      consumeRandomResources,
       canAfford,
+      monitorFoodCrisis,
     };
 
     return resourceStore;

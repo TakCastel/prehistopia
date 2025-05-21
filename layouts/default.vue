@@ -20,6 +20,8 @@
     <main
       class="flex-grow flex items-center justify-center mt-[44px] mr-[64px]"
     >
+      <AlertStack />
+
       <slot />
     </main>
 

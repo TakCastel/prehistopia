@@ -136,13 +136,36 @@ function skipAllTutorials() {
   );
 }
 
-const currentStep = computed(() => {
-  if (!mapStore.map || mapStore.map.length === 0) return null;
+const currentStep = ref(null);
+
+let lastStepId = null;
+
+watchEffect(async () => {
+  if (!mapStore.map || mapStore.map.length === 0) return;
+
   for (const step of tutorialSteps) {
     if (!seenSteps.value.has(step.id) && step.condition()) {
-      return step;
+      if (step.id !== lastStepId) {
+        lastStepId = step.id;
+
+        // ⏳ Ajoute un délai conditionnel selon l'étape
+        if (step.check !== "ALWAYS") {
+          currentStep.value = null;
+          await new Promise((resolve) => setTimeout(resolve, 2500));
+        }
+
+        currentStep.value = step;
+      }
+      return;
     }
   }
-  return null;
+
+  currentStep.value = null;
+});
+
+watch(currentStep, (step) => {
+  if (step) {
+    mapStore.selectedBuilding = null;
+  }
 });
 </script>

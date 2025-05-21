@@ -6,32 +6,46 @@
     Recommencer
   </button>
 
-  <!-- Modale de confirmation -->
   <div
     v-if="showModal"
-    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
   >
     <div
-      class="bg-[#3B2A21] text-white p-6 rounded-lg shadow-lg border border-[#2E211B] w-1/3 text-center"
+      class="bg-[#FFF9EE] max-w-md w-full p-6 rounded-lg shadow-xl border border-[#D9C2A6] relative text-[#4B3A29] flex flex-col items-stretch"
     >
-      <h2 class="text-lg font-bold mb-4 text-orange-300">Attention</h2>
-      <p class="mb-6 text-gray-300">
-        Êtes-vous sûr de vouloir tout supprimer et recommencer ?
+      <!-- Titre -->
+      <h2 class="text-2xl font-bold mb-2 text-center">Tout recommencer ?</h2>
+
+      <!-- Texte de confirmation -->
+      <p class="text-sm italic mb-6 text-center">
+        Cette action réinitialisera votre partie.<br />
+        Vous perdrez tous vos bâtiments et ressources actuels.
       </p>
-      <div class="flex justify-center gap-4">
+
+      <!-- 🧭 Boutons -->
+      <div class="flex justify-between gap-4 mt-auto pt-2">
         <button
-          class="bg-[#8B3E2F] hover:bg-[#732F24] text-white px-4 py-2 rounded transition-colors"
-          @click="confirmRestart"
-        >
-          Oui, tout supprimer
-        </button>
-        <button
-          class="bg-[#4E3B31] hover:bg-[#3B2B24] text-white px-4 py-2 rounded transition-colors"
+          class="bg-[#E9DCCF] text-[#4E3B31] py-2 px-4 rounded border border-[#3B2A21] hover:brightness-105 transition w-1/2 text-sm"
           @click="showModal = false"
         >
           Annuler
         </button>
+
+        <button
+          class="bg-[#4E3B31] text-white py-2 px-4 rounded border border-[#3B2A21] hover:brightness-110 transition w-1/2 text-sm"
+          @click="confirmRestart"
+        >
+          Oui, recommencer
+        </button>
       </div>
+
+      <!-- ❌ Bouton de fermeture -->
+      <button
+        class="absolute top-2 right-2 text-sm text-gray-500 hover:text-black"
+        @click="showModal = false"
+      >
+        ✕
+      </button>
     </div>
   </div>
 </template>

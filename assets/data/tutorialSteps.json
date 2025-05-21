@@ -2,7 +2,7 @@
   {
     "id": "start",
     "title": "L'arrivée",
-    "flavorText": "Vous venez de poser pied sur une terre vierge. Vos colons grelottent, regardant le ciel dans l’attente d’un signe. Un feu, peut-être, pour les rassembler et les guider.",
+    "flavorText": "Vous venez de poser pied sur une terre vierge. Vos colons grelottent, serrant contre eux quelques provisions emportées pour survivre aux premiers jours. Ils lèvent les yeux vers le ciel, dans l’attente d’un signe. Un feu, peut-être, pour les rassembler et les guider.",
     "image": "/images/tutorial/start_fire.png",
     "explanation": "Ouvrez le menu situé à droite de l’écran pour accéder aux bâtiments essentiels. Sélectionnez le 'Feu de camp', puis placez-le dans une zone dégagée de la carte.",
     "check": "ALWAYS"
@@ -54,5 +54,13 @@
     "image": "/images/tutorial/faith_intro.png",
     "explanation": "Vous êtes désormais libre de bâtir comme bon vous semble. Certains bâtiments, comme le feu de camp ou les monuments religieux, produisent de la foi. Cette ressource vous sera précieuse pour progresser vers de nouvelles ères.",
     "check": "leather_shelter >= 1"
+  },
+  {
+    "id": "firstRuin",
+    "title": "Ce qui s’effondre",
+    "flavorText": "Un cri, puis le silence. Une hutte s’est écroulée. Ils sont partis, ou tombés. Le sol ne nourrit plus, et la mémoire devient poussière.",
+    "image": "/images/tutorial/ruin_warning.png",
+    "explanation": "Lorsque plus aucune nourriture n’est disponible, vos colons fuient ou s’effondrent. Chaque minute passée sans trouver à manger condamne une habitation. Construisez des pièges, cultivez, cueillez — mais nourrissez.",
+    "check": "ruin >= 1"
   }
 ]

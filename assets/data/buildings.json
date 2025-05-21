@@ -8,34 +8,60 @@
           "name": "Feu de camp",
           "code": "campfire",
           "icon": "mdi:campfire",
-          "cost": { "gold": 30 }
+          "cost": {
+            "gold": 30
+          },
+          "income": {
+            "faith": 1,
+            "gold": -3
+          },
+          "description": "Point de départ vital. Permet la construction des logements à proximité. Aucun bâtiment ne peut être placé juste autour."
         },
         {
           "name": "Abri de stockage",
           "code": "storage_shelter",
           "icon": "mdi:warehouse",
-          "cost": { "gold": 200 },
+          "cost": {
+            "gold": 200
+          },
           "requires": {
             "buildings": ["stone_quarry"]
-          }
+          },
+          "income": {
+            "gold": -20
+          },
+          "description": "Structure clé. Nécessaire à la construction de toutes les industries dans un rayon de 1 case."
         },
         {
           "name": "Puits rudimentaire",
           "code": "primitive_well",
           "icon": "mdi:water-well",
-          "cost": { "gold": 150 },
+          "cost": {
+            "gold": 150
+          },
           "requires": {
             "buildings": ["pottery_workshop"]
-          }
+          },
+          "income": {
+            "gold": -15
+          },
+          "description": "Fournit de l'eau pour les cultures. Nécessite un atelier de poterie."
         },
         {
           "name": "Cabane du chasseur",
           "code": "hunting_traps",
           "icon": "mdi:paw",
-          "cost": { "gold": 50 },
+          "cost": {
+            "gold": 50
+          },
           "requires": {
             "buildings": ["branch_hut"]
-          }
+          },
+          "income": {
+            "meat": 10,
+            "gold": -5
+          },
+          "description": "Produit de la viande. Nécessite une hutte. Requis pour la fosse de tannage."
         }
       ]
     },
@@ -47,30 +73,52 @@
           "name": "Hutte en branchages",
           "code": "branch_hut",
           "icon": "game-icons:hut",
-          "cost": { "gold": 120 },
+          "cost": {
+            "gold": 120
+          },
           "requires": {
             "buildings": ["campfire"]
-          }
+          },
+          "income": {
+            "gold": 50
+          },
+          "description": "Logement simple à construire autour d’un feu de camp (rayon 4)."
         },
         {
           "name": "Abri en peaux",
           "code": "leather_shelter",
           "icon": "mdi:tent",
-          "cost": { "gold": 300 },
+          "cost": {
+            "gold": 300
+          },
           "requires": {
             "buildings": ["campfire", "stone_circle"],
-            "resources": { "leather": 10 }
-          }
+            "resources": {
+              "leather": 10
+            }
+          },
+          "income": {
+            "gold": 150
+          },
+          "description": "Logement amélioré nécessitant un cercle de pierres et du cuir."
         },
         {
           "name": "Maison familial",
           "code": "family_house",
           "icon": "mdi:home-group",
-          "cost": { "gold": 600 },
+          "cost": {
+            "gold": 600
+          },
           "requires": {
             "buildings": ["campfire", "experimental_lab"],
-            "resources": { "pottery": 20 }
-          }
+            "resources": {
+              "pottery": 20
+            }
+          },
+          "income": {
+            "gold": 300
+          },
+          "description": "Habitation avancée. Nécessite un atelier expérimental et de la poterie."
         }
       ]
     },
@@ -82,50 +130,93 @@
           "name": "Carrière de pierre",
           "code": "stone_quarry",
           "icon": "mdi:mountain",
-          "cost": { "gold": 800 },
+          "cost": {
+            "gold": 800
+          },
           "requires": {
             "buildings": ["branch_hut", "hunting_traps"]
-          }
+          },
+          "income": {
+            "stone": 1,
+            "gold": -80
+          },
+          "description": "Ne peut être construit qu’à côté des montagnes. Fournit de la pierre brute."
         },
         {
           "name": "Tailleur de pierre",
           "code": "stonecutter",
           "icon": "mdi:anvil",
-          "cost": { "gold": 400 },
+          "cost": {
+            "gold": 400
+          },
           "requires": {
             "buildings": ["storage_shelter", "stone_quarry"],
-            "resources": { "stone": 5 }
-          }
+            "resources": {
+              "stone": 5
+            }
+          },
+          "income": {
+            "stoneTools": 1,
+            "gold": -40
+          },
+          "description": "Transforme la pierre en outils. Doit être à proximité d’un abri de stockage."
         },
         {
           "name": "Fosse de tannage",
           "code": "tanning_pit",
           "icon": "game-icons:animal-hide",
-          "cost": { "gold": 350 },
+          "cost": {
+            "gold": 350
+          },
           "requires": {
             "buildings": ["storage_shelter", "hunting_traps"],
-            "resources": { "meat": 5 }
-          }
+            "resources": {
+              "meat": 5
+            }
+          },
+          "income": {
+            "leather": 1,
+            "gold": -35
+          },
+          "description": "Transforme la viande en cuir. Doit être placé à côté d’un abri de stockage."
         },
         {
           "name": "Scierie rudimentaire",
           "code": "basic_sawmill",
           "icon": "mdi:saw-blade",
-          "cost": { "gold": 750 },
+          "cost": {
+            "gold": 750
+          },
           "requires": {
             "buildings": ["storage_shelter", "knowledge_stone"],
-            "resources": { "stoneTools": 10 }
-          }
+            "resources": {
+              "stoneTools": 10
+            }
+          },
+          "income": {
+            "processedWood": 1,
+            "gold": -75
+          },
+          "description": "Produit du bois transformé. Doit être proche d’un abri de stockage."
         },
         {
           "name": "Atelier de poterie",
           "code": "pottery_workshop",
           "icon": "mdi:pot",
-          "cost": { "gold": 1200 },
+          "cost": {
+            "gold": 1200
+          },
           "requires": {
             "buildings": ["storage_shelter", "experimental_lab"],
-            "resources": { "processedWood": 10 }
-          }
+            "resources": {
+              "processedWood": 10
+            }
+          },
+          "income": {
+            "pottery": 1,
+            "gold": -120
+          },
+          "description": "Produit de la poterie. Requiert un stockage et un atelier expérimental."
         }
       ]
     },
@@ -137,22 +228,49 @@
           "name": "Zone de cueillette",
           "code": "gathering_area",
           "icon": "mdi:fruit-cherries",
-          "cost": { "gold": 150 },
-          "requires": { "buildings": ["branch_hut"] }
+          "cost": {
+            "gold": 150
+          },
+          "requires": {
+            "buildings": ["branch_hut"]
+          },
+          "income": {
+            "medicinalHerbs": 3,
+            "gold": -15
+          },
+          "description": "Zone pour cueillir des herbes. Nécessite une hutte basique."
         },
         {
           "name": "Champ de racines",
           "code": "root_field",
           "icon": "mdi:carrot",
-          "cost": { "gold": 500 },
-          "requires": { "buildings": ["leather_shelter"] }
+          "cost": {
+            "gold": 500
+          },
+          "requires": {
+            "buildings": ["leather_shelter"]
+          },
+          "income": {
+            "roots": 5,
+            "gold": -50
+          },
+          "description": "Produit des racines comestibles. Requiert un abri en peaux."
         },
         {
           "name": "Ferme primitive",
           "code": "primitive_farm",
           "icon": "mdi:grain",
-          "cost": { "gold": 1000 },
-          "requires": { "buildings": ["primitive_well", "family_house"] }
+          "cost": {
+            "gold": 1000
+          },
+          "requires": {
+            "buildings": ["primitive_well", "family_house"]
+          },
+          "income": {
+            "wheat": 10,
+            "gold": -100
+          },
+          "description": "Produit du blé. Nécessite un puits et une maison familiale."
         }
       ]
     },
@@ -164,25 +282,56 @@
           "name": "Totem en bois",
           "code": "wood_totem",
           "icon": "game-icons:totem",
-          "cost": { "gold": 250 },
-          "requires": { "resources": { "processedWood": 10 } }
+          "cost": {
+            "gold": 250
+          },
+          "requires": {
+            "resources": {
+              "processedWood": 10
+            }
+          },
+          "income": {
+            "faith": 2,
+            "gold": -25
+          },
+          "description": "Totem de foi. Requiert du bois transformé."
         },
         {
           "name": "Cercle de pierres",
           "code": "stone_circle",
           "icon": "mdi:circle",
-          "cost": { "gold": 600 },
-          "requires": { "resources": { "stoneTools": 15 } }
+          "cost": {
+            "gold": 600
+          },
+          "requires": {
+            "resources": {
+              "stoneTools": 15
+            }
+          },
+          "income": {
+            "faith": 4,
+            "gold": -60
+          },
+          "description": "Rite sacré en pierre. Requiert des outils en pierre."
         },
         {
           "name": "Autel de rituels",
           "code": "ritual_altar",
           "icon": "mdi:lectern",
-          "cost": { "gold": 1000 },
+          "cost": {
+            "gold": 1000
+          },
           "requires": {
             "buildings": ["wood_totem"],
-            "resources": { "faith": 100 }
-          }
+            "resources": {
+              "stone": 20
+            }
+          },
+          "income": {
+            "faith": 8,
+            "gold": -100
+          },
+          "description": "Augmente la foi. Requiert un totem et une grande quantité de pierre."
         }
       ]
     },
@@ -194,22 +343,43 @@
           "name": "Palissade en bois",
           "code": "wooden_wall",
           "icon": "mdi:fence",
-          "cost": { "gold": 500 },
-          "requires": { "buildings": ["knowledge_stone"] }
+          "cost": {
+            "gold": 500
+          },
+          "requires": {
+            "buildings": ["knowledge_stone"]
+          },
+          "description": "Défense basique. Requiert la Pierre des savoirs."
         },
         {
           "name": "Tour de guet",
           "code": "watchtower",
           "icon": "mdi:binoculars",
-          "cost": { "gold": 800 },
-          "requires": { "buildings": ["knowledge_stone"] }
+          "cost": {
+            "gold": 800
+          },
+          "requires": {
+            "buildings": ["knowledge_stone"],
+            "resources": {
+              "processedWood": 20
+            }
+          },
+          "income": {
+            "faith": 1
+          },
+          "description": "Permet la surveillance. Doit être proche d’une Pierre des savoirs."
         },
         {
           "name": "Caserne",
           "code": "barracks",
           "icon": "mdi:shield-sword",
-          "cost": { "gold": 350 },
-          "requires": { "buildings": ["experimental_lab"] }
+          "cost": {
+            "gold": 350
+          },
+          "requires": {
+            "buildings": ["experimental_lab"]
+          },
+          "description": "Permet l'entraînement militaire. Requiert un atelier expérimental."
         }
       ]
     },
@@ -221,21 +391,39 @@
           "name": "Pierre des savoirs",
           "code": "knowledge_stone",
           "icon": "mdi:necklace",
-          "cost": { "gold": 2000 },
+          "cost": {
+            "gold": 2000
+          },
           "requires": {
             "buildings": ["stone_circle"],
-            "resources": { "faith": 20 }
-          }
+            "resources": {
+              "faith": 100
+            }
+          },
+          "income": {
+            "faith": 2,
+            "gold": -200
+          },
+          "description": "Source de savoir. Débloque les défenses et autres bâtiments."
         },
         {
           "name": "Atelier expérimental",
           "code": "experimental_lab",
           "icon": "mdi:scroll",
-          "cost": { "gold": 5000 },
+          "cost": {
+            "gold": 5000
+          },
           "requires": {
             "buildings": ["ritual_altar"],
-            "resources": { "faith": 50 }
-          }
+            "resources": {
+              "faith": 250
+            }
+          },
+          "income": {
+            "stoneTools": 2,
+            "gold": -500
+          },
+          "description": "Laboratoire de recherche. Nécessite un autel de rituels et beaucoup de foi."
         }
       ]
     }
