@@ -2,6 +2,10 @@
   <div
     class="fixed top-[44px] right-16 h-full w-48 bg-[#3B2A21] text-white p-2 z-50 border-l border-[#2E211B] flex flex-col gap-2 shadow-lg"
   >
+    <div class="font-bold text-[#EEDFC6] mb-1">
+      {{ category.name }}
+    </div>
+
     <BuildingButton
       v-for="building in category.buildings"
       :key="building.name"

@@ -4,7 +4,7 @@ import { ref } from "vue";
 export const useAlertStore = defineStore("alert", () => {
   const alerts = ref([]);
 
-  function push(type, message, duration = 3000) {
+  function push(type, message, duration = 5000) {
     const id = Date.now() + Math.random();
     const alert = { id, type, message };
 

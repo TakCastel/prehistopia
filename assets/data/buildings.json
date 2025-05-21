@@ -58,7 +58,7 @@
             "buildings": ["branch_hut"]
           },
           "income": {
-            "meat": 10,
+            "meat": 15,
             "gold": -5
           },
           "description": "Produit de la viande. Nécessite une hutte. Requis pour la fosse de tannage."
@@ -66,7 +66,7 @@
       ]
     },
     {
-      "name": "Logement",
+      "name": "Logements",
       "icon": "mdi:home",
       "buildings": [
         {
@@ -171,7 +171,7 @@
           "requires": {
             "buildings": ["storage_shelter", "hunting_traps"],
             "resources": {
-              "meat": 5
+              "stoneTools": 5
             }
           },
           "income": {
@@ -221,7 +221,7 @@
       ]
     },
     {
-      "name": "Production",
+      "name": "Récoltes",
       "icon": "mdi:leaf",
       "buildings": [
         {
@@ -279,24 +279,6 @@
       "icon": "mdi:meditation",
       "buildings": [
         {
-          "name": "Totem en bois",
-          "code": "wood_totem",
-          "icon": "game-icons:totem",
-          "cost": {
-            "gold": 250
-          },
-          "requires": {
-            "resources": {
-              "processedWood": 10
-            }
-          },
-          "income": {
-            "faith": 2,
-            "gold": -25
-          },
-          "description": "Totem de foi. Requiert du bois transformé."
-        },
-        {
           "name": "Cercle de pierres",
           "code": "stone_circle",
           "icon": "mdi:circle",
@@ -309,10 +291,28 @@
             }
           },
           "income": {
-            "faith": 4,
+            "faith": 2,
             "gold": -60
           },
           "description": "Rite sacré en pierre. Requiert des outils en pierre."
+        },
+        {
+          "name": "Totem en bois",
+          "code": "wood_totem",
+          "icon": "game-icons:totem",
+          "cost": {
+            "gold": 250
+          },
+          "requires": {
+            "resources": {
+              "processedWood": 20
+            }
+          },
+          "income": {
+            "faith": 4,
+            "gold": -25
+          },
+          "description": "Totem de foi. Requiert du bois transformé."
         },
         {
           "name": "Autel de rituels",
@@ -324,14 +324,14 @@
           "requires": {
             "buildings": ["wood_totem"],
             "resources": {
-              "stone": 20
+              "medicinalHerbs": 100
             }
           },
           "income": {
             "faith": 8,
             "gold": -100
           },
-          "description": "Augmente la foi. Requiert un totem et une grande quantité de pierre."
+          "description": "Augmente la foi. Requiert un totem et une quantité astronomique d'herbes médicinales."
         }
       ]
     },

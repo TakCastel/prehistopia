@@ -82,6 +82,6 @@ function confirmRestart() {
       localStorage.removeItem("seenTutorialSteps");
       window.dispatchEvent(new Event("tutorial:reset"));
     }
-  }, 1000);
+  }, 2000);
 }
 </script>

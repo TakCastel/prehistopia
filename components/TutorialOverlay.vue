@@ -21,7 +21,6 @@
 
       <p class="text-base mb-6">{{ currentStep.explanation }}</p>
 
-      <!-- 🧭 Zone des boutons en bas -->
       <div class="flex justify-between gap-4 mt-auto pt-4">
         <button
           class="bg-[#E9DCCF] text-[#4E3B31] py-2 px-4 rounded border border-[#3B2A21] hover:brightness-105 transition w-1/2"
@@ -38,7 +37,6 @@
         </button>
       </div>
 
-      <!-- ❌ Bouton fermer -->
       <button
         class="absolute top-2 right-2 text-sm text-gray-500 hover:text-black"
         @click="dismissCurrentStep"
@@ -50,45 +48,39 @@
 </template>
 
 <script setup>
-import { ref, computed, onBeforeUnmount } from "vue";
+import {
+  ref,
+  computed,
+  watch,
+  watchEffect,
+  onMounted,
+  onBeforeUnmount,
+} from "vue";
 import { useMapStore } from "@/stores/useMapStore";
 import rawSteps from "@/assets/data/tutorialSteps.json";
 
-let resetHandler;
-
-if (typeof window !== "undefined") {
-  resetHandler = () => {
-    seenSteps.value = new Set();
-    localStorage.removeItem("seenTutorialSteps");
-  };
-  window.addEventListener("tutorial:reset", resetHandler);
-}
-
-onBeforeUnmount(() => {
-  if (typeof window !== "undefined" && resetHandler) {
-    window.removeEventListener("tutorial:reset", resetHandler);
-  }
-});
-
 const mapStore = useMapStore();
 const seenSteps = ref(new Set());
+const currentStep = ref(null);
+let lastStepId = null;
 
-// Charge les étapes depuis localStorage
-if (typeof window !== "undefined") {
-  const saved = JSON.parse(localStorage.getItem("seenTutorialSteps") || "[]");
-  seenSteps.value = new Set(saved);
+// ⏪ Fonction de reset réutilisable
+function resetTutorial() {
+  seenSteps.value = new Set();
+  localStorage.removeItem("seenTutorialSteps");
+  currentStep.value = tutorialSteps.find((s) => s.check === "ALWAYS") || null;
 }
 
-// Reset via événement global
-if (typeof window !== "undefined") {
+// Écoute de l’événement global pour reset
+onMounted(() => {
   const saved = JSON.parse(localStorage.getItem("seenTutorialSteps") || "[]");
   seenSteps.value = new Set(saved);
+  window.addEventListener("tutorial:reset", resetTutorial);
+});
 
-  window.addEventListener("tutorial:reset", () => {
-    seenSteps.value = new Set();
-    localStorage.removeItem("seenTutorialSteps");
-  });
-}
+onBeforeUnmount(() => {
+  window.removeEventListener("tutorial:reset", resetTutorial);
+});
 
 function dismissCurrentStep() {
   if (currentStep.value) {
@@ -100,7 +92,15 @@ function dismissCurrentStep() {
   }
 }
 
-// Interprétation des conditions depuis le JSON
+function skipAllTutorials() {
+  tutorialSteps.forEach((step) => seenSteps.value.add(step.id));
+  localStorage.setItem(
+    "seenTutorialSteps",
+    JSON.stringify([...seenSteps.value])
+  );
+}
+
+// ⛏️ Parser de condition de type "branch_hut >= 3"
 function evalCheck(expr, counts) {
   if (expr === "ALWAYS") return true;
   const match = expr.match(/^(\w+)\s*(>=?)\s*(\d+)$/);
@@ -110,6 +110,7 @@ function evalCheck(expr, counts) {
   return op === ">=" ? count >= +value : count > +value;
 }
 
+// Enrichit les steps avec leur condition d’apparition
 const tutorialSteps = rawSteps.map((step) => ({
   ...step,
   condition: () => {
@@ -128,18 +129,7 @@ const tutorialSteps = rawSteps.map((step) => ({
   },
 }));
 
-function skipAllTutorials() {
-  tutorialSteps.forEach((step) => seenSteps.value.add(step.id));
-  localStorage.setItem(
-    "seenTutorialSteps",
-    JSON.stringify([...seenSteps.value])
-  );
-}
-
-const currentStep = ref(null);
-
-let lastStepId = null;
-
+// 🔄 Vérifie si un nouveau step est dispo
 watchEffect(async () => {
   if (!mapStore.map || mapStore.map.length === 0) return;
 
@@ -148,7 +138,6 @@ watchEffect(async () => {
       if (step.id !== lastStepId) {
         lastStepId = step.id;
 
-        // ⏳ Ajoute un délai conditionnel selon l'étape
         if (step.check !== "ALWAYS") {
           currentStep.value = null;
           await new Promise((resolve) => setTimeout(resolve, 2500));
@@ -163,6 +152,7 @@ watchEffect(async () => {
   currentStep.value = null;
 });
 
+// 👋 On annule la sélection de bâtiment pendant le tuto
 watch(currentStep, (step) => {
   if (step) {
     mapStore.selectedBuilding = null;

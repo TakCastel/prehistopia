@@ -44,7 +44,7 @@
     "title": "L'entretien",
     "flavorText": "Les outils s’accumulent, les peaux sont travaillées… mais rien n’est jamais gratuit. Chaque atelier demande sa part d’énergie, d’entretien… et d’or.",
     "image": "/images/tutorial/economy_warning.png",
-    "explanation": "Tous les bâtiments ont un coût d’entretien équivalent à 10% de leur prix initial. Les maisons, quant à elles, rapportent de l’or. Si un bâtiment affiche une icône de danger au-dessus, cela signifie qu’il manque d’habitants pour fonctionner. Essayez d'avancer dans la construction de votre village jusqu'à pouvoir construire votre première maison en peau.",
+    "explanation": "La plupart des bâtiments coûtent de l’or en entretien et produisent des ressources. Si un bâtiment affiche une icône de danger, c’est qu’il manque de main d'oeuvre pour fonctionner. Avancez dans la construction de votre village jusqu'à pouvoir construire votre premier abri en peau.",
     "check": "stonecutter >= 1 AND tanning_pit >= 1"
   },
   {

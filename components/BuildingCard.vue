@@ -19,7 +19,7 @@
       <ul class="text-xs flex flex-col gap-1">
         <li v-if="building.cost?.gold" class="flex items-center gap-1">
           <Icon name="fluent-emoji:coin" class="w-4 h-4 text-yellow-500" />
-          <span>Or : {{ building.cost.gold }}</span>
+          <span>Or : {{ building.cost.gold.toLocaleString("fr-FR") }}</span>
         </li>
         <li
           v-for="(amount, resource) in filteredResourceCosts"

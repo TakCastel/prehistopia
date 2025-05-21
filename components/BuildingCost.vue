@@ -7,7 +7,7 @@
       >
         <Icon name="fluent-emoji:coin" class="w-3.5 h-3.5" />
       </span>
-      <span>{{ building.cost.gold }}</span>
+      <span>{{ building.cost.gold.toLocaleString("fr-FR") }}</span>
     </span>
 
     <!-- Autres ressources -->

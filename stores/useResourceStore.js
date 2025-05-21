@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import buildingsData from "@/assets/data/buildings.json";
 import { useAlertStore } from "@/stores/useAlertStore";
 
@@ -11,11 +11,11 @@ export const useResourceStore = defineStore(
     const leather = ref(0);
     const processedWood = ref(0);
     const pottery = ref(0);
-    const wheat = ref(10);
+    const wheat = ref(100);
     const roots = ref(0);
     const medicinalHerbs = ref(0);
     const stone = ref(0);
-    const meat = ref(20);
+    const meat = ref(50);
     const faith = ref(0);
     const population = ref(0);
 
@@ -52,11 +52,11 @@ export const useResourceStore = defineStore(
       leather.value = 0;
       processedWood.value = 0;
       pottery.value = 0;
-      wheat.value = 10;
+      wheat.value = 100;
       roots.value = 0;
       medicinalHerbs.value = 0;
       stone.value = 0;
-      meat.value = 20;
+      meat.value = 50;
       faith.value = 0;
     }
 
@@ -95,8 +95,6 @@ export const useResourceStore = defineStore(
           "🍽️ Nourriture consommée par la population :",
           consumptionLog
         );
-      } else {
-        console.log("⚠️ Aucun aliment disponible à consommer.");
       }
     }
 
@@ -122,7 +120,6 @@ export const useResourceStore = defineStore(
         let assignedPopulation = 0;
 
         inactiveBuildings.value = {};
-
         const popDependentBuildings = [
           "stone_quarry",
           "primitive_farm",
@@ -134,6 +131,9 @@ export const useResourceStore = defineStore(
           "hunting_traps",
           "stonecutter",
         ];
+
+        // 🔁 Étape 1 : collecte des bâtiments avec besoin de population
+        const popRequiredCells = [];
 
         for (let y = 0; y < map.length; y++) {
           for (let x = 0; x < map[y].length; x++) {
@@ -150,29 +150,46 @@ export const useResourceStore = defineStore(
               continue;
             }
 
-            const requiresPop = popDependentBuildings.includes(code);
-            if (requiresPop) {
-              if (assignedPopulation >= availablePop) {
-                cell.inactive = true;
-                continue;
+            if (popDependentBuildings.includes(code)) {
+              popRequiredCells.push(cell);
+            } else {
+              cell.inactive = false;
+              for (const [resource, amount] of Object.entries(income)) {
+                totalIncome[resource] = (totalIncome[resource] || 0) + amount;
               }
-              assignedPopulation++;
-            }
-
-            cell.inactive = false;
-
-            for (const [resource, amount] of Object.entries(income)) {
-              totalIncome[resource] = (totalIncome[resource] || 0) + amount;
             }
           }
         }
 
+        // 🔀 Étape 2 : mélange aléatoire et activation partielle
+        const shuffled = [...popRequiredCells].sort(() => Math.random() - 0.5);
+        for (let i = 0; i < shuffled.length; i++) {
+          if (assignedPopulation < availablePop) {
+            const cell = shuffled[i];
+            cell.inactive = false;
+            const income = getIncomeForBuilding(cell.building);
+            for (const [resource, amount] of Object.entries(income)) {
+              totalIncome[resource] = (totalIncome[resource] || 0) + amount;
+            }
+            assignedPopulation++;
+          } else {
+            shuffled[i].inactive = true;
+          }
+        }
+
+        // 💰 Applique les revenus
         for (const [resource, amount] of Object.entries(totalIncome)) {
           if (typeof resourceStore[resource]?.value !== "undefined") {
             resourceStore[resource].value += amount;
           } else {
             console.warn(`⚠️ Resource "${resource}" not found in store.`);
           }
+        }
+
+        const canvas = document.querySelector("canvas");
+        if (canvas) {
+          const mapStore = useMapStore();
+          mapStore.draw(canvas);
         }
 
         consumeRandomResources();
@@ -203,57 +220,73 @@ export const useResourceStore = defineStore(
     let houseDestructionInterval = null;
 
     function monitorFoodCrisis(mapRef) {
-      watchEffect(() => {
-        const totalFood = meat.value + roots.value + wheat.value;
+      watch(
+        () => ({
+          totalFood:
+            meat.value + roots.value + wheat.value + medicinalHerbs.value,
+          requiredFood: population.value,
+        }),
+        ({ totalFood, requiredFood }) => {
+          const famineOngoing = totalFood < requiredFood;
 
-        if (totalFood === 0 && !famineTimer) {
-          useAlertStore().push(
-            "error",
-            "La famine frappe votre communauté, trouvez vite des sources de nourriture !"
-          );
+          if (famineOngoing) {
+            if (!famineTimer) {
+              useAlertStore().push("error", "La famine s’installe.");
+              famineTimer = setInterval(() => {
+                startHouseDestructionLoop(mapRef);
+              }, 10 * 1000);
+            }
+          } else {
+            if (famineTimer) {
+              clearInterval(famineTimer);
+              famineTimer = null;
+            }
 
-          famineTimer = setTimeout(() => {
-            startHouseDestructionLoop(mapRef);
-          }, 60 * 1000);
-        }
-
-        if (totalFood > 0) {
-          // Nourriture revenue : on annule les timers
-          clearTimeout(famineTimer);
-          clearInterval(houseDestructionInterval);
-          famineTimer = null;
-          houseDestructionInterval = null;
-        }
-      });
+            if (houseDestructionInterval) {
+              clearInterval(houseDestructionInterval);
+              houseDestructionInterval = null;
+            }
+          }
+        },
+        { immediate: true, flush: "post" }
+      );
     }
 
     function startHouseDestructionLoop(mapRef) {
-      console.warn("☠️ Début des destructions de maisons.");
+      const map = mapRef.value;
+      const housingCodes = ["branch_hut", "leather_shelter", "family_house"];
+      const ruinCandidates = [];
 
-      houseDestructionInterval = setInterval(async () => {
-        const map = mapRef.value;
-        const housingCodes = ["branch_hut", "leather_shelter", "family_house"];
-
-        for (const row of map) {
-          for (const cell of row) {
-            if (housingCodes.includes(cell.building)) {
-              cell.building = "ruin";
-
-              const mapStore = useMapStore();
-              await mapStore.saveMap();
-
-              useAlertStore().push(
-                "error",
-                "Un habitant a quitté votre village car il manquait de nourriture."
-              );
-              return; // une seule maison détruite par minute
-            }
+      // 🔍 On collecte tous les foyers encore intacts
+      for (const row of map) {
+        for (const cell of row) {
+          if (housingCodes.includes(cell.building)) {
+            ruinCandidates.push(cell);
           }
         }
+      }
 
-        console.warn("Aucune maison restante à détruire.");
+      // 🧱 Si aucun foyer, on arrête tout
+      if (ruinCandidates.length === 0) {
         clearInterval(houseDestructionInterval);
-      }, 60 * 1000);
+        houseDestructionInterval = null;
+
+        const mapStore = useMapStore();
+        mapStore.saveMap();
+        mapStore.draw(document.querySelector("canvas"));
+        return;
+      }
+
+      // 🎯 Sélection aléatoire
+      const chosen =
+        ruinCandidates[Math.floor(Math.random() * ruinCandidates.length)];
+      chosen.building = "ruin";
+
+      const mapStore = useMapStore();
+      mapStore.saveMap();
+      mapStore.draw(document.querySelector("canvas"));
+
+      useAlertStore().push("error", "Un foyer s’est vidé.");
     }
 
     const resourceStore = {

@@ -80,7 +80,7 @@ function handleMouseUp(event) {
   } else if (mapStore.selectedBuilding) {
     // Clic dans la zone noire → désélection
     mapStore.selectedBuilding = null;
-    console.log("🎯 Deselection due to click on empty canvas area.");
+    mapStore.draw(document.querySelector("canvas")); // force le redraw
   }
 }
 
