@@ -231,7 +231,10 @@ export const useResourceStore = defineStore(
 
           if (famineOngoing) {
             if (!famineTimer) {
-              useAlertStore().push("error", "La famine s’installe.");
+              useAlertStore().push(
+                "error",
+                "Les réserves de nourriture sont faibles."
+              );
               famineTimer = setInterval(() => {
                 startHouseDestructionLoop(mapRef);
               }, 10 * 1000);

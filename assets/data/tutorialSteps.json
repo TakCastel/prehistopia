@@ -18,9 +18,9 @@
   {
     "id": "afterThreeBranchHuts",
     "title": "La faim",
-    "flavorText": "Le camp accueille maintenant plusieurs familles. Mais les ventres se vident, les réserves diminuent. Il faut trouver de la nourriture avant que la famine ne s’installe.",
+    "flavorText": "Le camp abrite maintenant plusieurs familles. Mais les ventres se vident et les réserves diminuent. Il faut trouver de la nourriture avant que la famine ne s’installe.",
     "image": "/images/tutorial/hunting_traps.png",
-    "explanation": "Placez un camp de chasse pour produire de la viande et nourrir votre population. Ce bâtiment peut être installé sur n’importe quelle case libre.",
+    "explanation": "Placez une cabane de chasse pour produire de la viande et nourrir votre population. Ce bâtiment peut être installé sur n’importe quelle case libre.",
     "check": "branch_hut >= 3"
   },
   {
