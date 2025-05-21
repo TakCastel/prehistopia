@@ -40,26 +40,26 @@
             "gold": 150
           },
           "requires": {
-            "buildings": ["pottery_workshop"]
+            "buildings": ["family_house"]
           },
           "income": {
             "gold": -15
           },
-          "description": "Fournit de l'eau pour les cultures. Nécessite un atelier de poterie."
+          "description": "Fournit de l'eau pour les cultures. Doit être construit à côté d'une maison familiale."
         },
         {
           "name": "Cabane du chasseur",
           "code": "hunting_traps",
           "icon": "mdi:paw",
           "cost": {
-            "gold": 50
+            "gold": 200
           },
           "requires": {
             "buildings": ["branch_hut"]
           },
           "income": {
-            "meat": 15,
-            "gold": -5
+            "meat": 1,
+            "gold": -20
           },
           "description": "Produit de la viande. Nécessite une hutte. Requis pour la fosse de tannage."
         }
@@ -112,7 +112,7 @@
           "requires": {
             "buildings": ["campfire", "experimental_lab"],
             "resources": {
-              "pottery": 20
+              "pottery": 10
             }
           },
           "income": {
@@ -235,7 +235,7 @@
             "buildings": ["branch_hut"]
           },
           "income": {
-            "medicinalHerbs": 3,
+            "medicinalHerbs": 2,
             "gold": -15
           },
           "description": "Zone pour cueillir des herbes. Nécessite une hutte basique, ne peut se construire que dans les collines."
@@ -251,7 +251,7 @@
             "buildings": ["leather_shelter"]
           },
           "income": {
-            "roots": 5,
+            "roots": 3,
             "gold": -50
           },
           "description": "Produit des racines comestibles. Requiert un abri en peaux, ne peut se construire que dans les collines."
@@ -267,7 +267,7 @@
             "buildings": ["primitive_well", "family_house"]
           },
           "income": {
-            "wheat": 10,
+            "wheat": 5,
             "gold": -100
           },
           "description": "Produit du blé. Requiert une maison familiale et se construit autour d'un puits."
@@ -347,7 +347,10 @@
             "gold": 500
           },
           "requires": {
-            "buildings": ["knowledge_stone"]
+            "buildings": ["knowledge_stone"],
+            "resources": {
+              "processedWood": 50
+            }
           },
           "description": "Défense basique. Requiert la Pierre des savoirs."
         },
@@ -361,7 +364,7 @@
           "requires": {
             "buildings": ["knowledge_stone"],
             "resources": {
-              "processedWood": 20
+              "stone": 100
             }
           },
           "income": {
@@ -377,7 +380,10 @@
             "gold": 350
           },
           "requires": {
-            "buildings": ["experimental_lab"]
+            "buildings": ["experimental_lab"],
+            "resources": {
+              "faith": 100
+            }
           },
           "description": "Permet l'entraînement militaire. Requiert un atelier expérimental."
         }

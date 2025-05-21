@@ -1,7 +1,14 @@
 <template>
   <div class="flex flex-wrap items-center gap-2 mt-1">
     <!-- Or -->
-    <span class="text-xs text-[#D7BFA5] flex items-center gap-1">
+    <span
+      class="text-xs flex items-center gap-1"
+      :class="
+        resourceStore.gold >= building.cost.gold
+          ? 'text-[#D7BFA5]'
+          : 'text-red-500'
+      "
+    >
       <span
         class="w-5 h-5 rounded-full bg-[#2E211B] flex items-center justify-center"
       >

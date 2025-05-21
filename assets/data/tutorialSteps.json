@@ -2,7 +2,7 @@
   {
     "id": "start",
     "title": "L'arrivée",
-    "flavorText": "Vous venez de poser pied sur une terre vierge. Vos colons grelottent, serrant contre eux quelques provisions emportées pour survivre aux premiers jours. Ils lèvent les yeux vers le ciel, dans l’attente d’un signe. Un feu, peut-être, pour les rassembler et les guider.",
+    "flavorText": "Vous venez d’arriver sur une terre inconnue. Vos colons grelottent, serrant contre eux leurs maigres provisions, juste de quoi survivre aux premiers jours. Ils lèvent les yeux vers le ciel, en quête d’un signe. Un feu pourrait les rassembler.",
     "image": "/images/tutorial/start_fire.png",
     "explanation": "Ouvrez le menu situé à droite de l’écran pour accéder aux bâtiments essentiels. Sélectionnez le 'Feu de camp', puis placez-le dans une zone dégagée de la carte.",
     "check": "ALWAYS"
@@ -10,23 +10,23 @@
   {
     "id": "afterCampfire",
     "title": "Les foyers",
-    "flavorText": "Ils se sont approchés, un à un, cherchant la chaleur, puis la parole, puis l’ordre. Le feu est devenu plus qu’un abri : un point de départ, un centre. Une vie s’organise.",
+    "flavorText": "Ils se sont approchés du feu, d’abord pour sa chaleur, puis pour parler, puis pour s’organiser. Ce feu n’est plus seulement un abri : c’est le centre du camp. Une nouvelle vie commence à se structurer.",
     "image": "/images/tutorial/fire_unlocked.png",
-    "explanation": "Vous pouvez désormais construire des habitations autour du feu. Celles-ci doivent impérativement être placées dans son rayon d’influence pour accueillir des habitants. N’hésitez pas à déboiser quelques arbres pour libérer suffisamment d’espace.",
+    "explanation": "Vous pouvez désormais construire des habitations autour du feu. Celles-ci doivent impérativement être placées dans son rayon d’influence. N’hésitez pas à déboiser quelques arbres avec l'outil 'pelle' pour libérer suffisamment d’espace.",
     "check": "campfire >= 1"
   },
   {
     "id": "afterThreeBranchHuts",
     "title": "La faim",
-    "flavorText": "Le camp abrite désormais plusieurs familles. Mais les ventres se creusent, les réserves fondent. Il faut nourrir ces vies avant que les murmures ne deviennent reproches.",
+    "flavorText": "Le camp accueille maintenant plusieurs familles. Mais les ventres se vident, les réserves diminuent. Il faut trouver de la nourriture avant que la famine ne s’installe.",
     "image": "/images/tutorial/hunting_traps.png",
-    "explanation": "Placez un camp de chasse pour assurer l’approvisionnement en viande. Ces pièges rudimentaires peuvent être installés dans n’importe quelle zone dégagée, de préférence près de la forêt.",
+    "explanation": "Placez un camp de chasse pour produire de la viande et nourrir votre population. Ce bâtiment peut être installé sur n’importe quelle case libre.",
     "check": "branch_hut >= 3"
   },
   {
     "id": "afterHuntingTraps",
     "title": "La roche",
-    "flavorText": "Vos chasseurs nourrissent les foyers, mais vos outils sont encore ceux des branches. Pour bâtir plus grand, il faut dompter la pierre elle-même.",
+    "flavorText": "Les chasseurs ramènent de quoi manger, mais vos outils restent rudimentaires. Pour construire davantage, il va falloir extraire et utiliser la pierre.",
     "image": "/images/tutorial/stone_quarry.png",
     "explanation": "Attendez d'avoir l'or nécessaire et construisez une carrière de pierre. Ce bâtiment ne peut être placé que près des montagnes : cherchez un terrain adjacent à une zone rocheuse grise.",
     "check": "hunting_traps >= 1"
@@ -34,7 +34,7 @@
   {
     "id": "afterStoneQuarry",
     "title": "Le dépôt",
-    "flavorText": "Les blocs extraits s’accumulent, mais sans endroit où les entreposer, vos efforts s’épuiseront. Une tribu qui bâtit doit aussi organiser.",
+    "flavorText": "La pierre s’accumule, mais sans lieu de stockage, le travail ralentit. Une tribu qui construit doit aussi savoir s’organiser.",
     "image": "/images/tutorial/storage_shelter.png",
     "explanation": "Construisez un abri de stockage près de votre campement. C’est autour de cet abri que vous pourrez ensuite implanter vos bâtiments industriels. Commencez par placer un atelier de tailleur de pierre à côté de cet abri, et placez d'autres industries ensuite.",
     "check": "stone_quarry >= 1"
@@ -42,7 +42,7 @@
   {
     "id": "afterStoneAndTanners",
     "title": "L'entretien",
-    "flavorText": "Les outils s’accumulent, les peaux sont travaillées… mais rien n’est jamais gratuit. Chaque atelier demande sa part d’énergie, d’entretien… et d’or.",
+    "flavorText": "Le village entre dans une nouvelle phase. Les premiers ateliers transforment les ressources, et l’organisation du travail devient essentielle.",
     "image": "/images/tutorial/economy_warning.png",
     "explanation": "La plupart des bâtiments coûtent de l’or en entretien et produisent des ressources. Si un bâtiment affiche une icône de danger, c’est qu’il manque de main d'oeuvre pour fonctionner. Avancez dans la construction de votre village jusqu'à pouvoir construire votre premier abri en peau.",
     "check": "stonecutter >= 1 AND tanning_pit >= 1"
@@ -50,7 +50,7 @@
   {
     "id": "afterLeatherShelter",
     "title": "La liberté",
-    "flavorText": "Un toit solide, des vivres, des outils… Vos gens peuvent enfin lever les yeux vers le ciel. Ce n’est plus la survie : c’est le début d’une vision.",
+    "flavorText": "Avec un toit, de la nourriture et des outils, vos gens ne pensent plus seulement à survivre. Le village peut maintenant se développer selon votre vision.",
     "image": "/images/tutorial/faith_intro.png",
     "explanation": "Vous êtes désormais libre de bâtir comme bon vous semble. Certains bâtiments, comme le feu de camp ou les monuments religieux, produisent de la foi. Cette ressource vous sera précieuse pour progresser vers de nouvelles ères.",
     "check": "leather_shelter >= 1"
@@ -58,9 +58,9 @@
   {
     "id": "firstRuin",
     "title": "Ce qui s’effondre",
-    "flavorText": "Un cri, puis le silence. Une hutte s’est écroulée. Ils sont partis, ou tombés. Le sol ne nourrit plus, et la mémoire devient poussière.",
+    "flavorText": "Une habitation s’est effondrée. Faute de nourriture, ses occupants ont fui ou disparu. Sans ressources, le village commence à se vider.",
     "image": "/images/tutorial/ruin_warning.png",
-    "explanation": "Lorsque plus aucune nourriture n’est disponible, vos colons fuient ou s’effondrent. Chaque minute passée sans trouver à manger condamne une habitation. Construisez des pièges, cultivez, cueillez — mais nourrissez.",
+    "explanation": "Sans nourriture, vos colons fuient ou disparaissent. Plus la famine dure, plus les habitations s’effondrent. Il faut agir vite pour nourrir votre village.",
     "check": "ruin >= 1"
   }
 ]

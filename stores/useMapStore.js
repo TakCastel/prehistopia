@@ -407,6 +407,17 @@ export const useMapStore = defineStore(
         return cell.terrainType === "hills";
       }
 
+      if (selectedBuilding.value === "primitive_well") {
+        const range = 1;
+        for (let dy = -range; dy <= range; dy++) {
+          for (let dx = -range; dx <= range; dx++) {
+            const neighbor = map.value[y + dy]?.[x + dx];
+            if (neighbor?.building === "family_house") return true;
+          }
+        }
+        return false;
+      }
+
       if (selectedBuilding.value === "primitive_farm") {
         const range = 1;
         for (let dy = -range; dy <= range; dy++) {
