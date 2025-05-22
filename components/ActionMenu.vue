@@ -1,28 +1,36 @@
 <template>
   <div
     ref="menuRef"
-    class="fixed top-[44px] right-0 h-full w-16 bg-[#4E3B31] flex flex-col items-center gap-2 p-2 z-30 border-l border-[#3B2A21]"
+    class="fixed top-[44px] right-0 h-[calc(100vh-44px)] w-16 bg-[#4E3B31] flex flex-col z-30 border-l border-[#3B2A21]"
   >
-    <button
-      v-for="category in categories"
-      :key="category.name"
-      class="p-2 w-full bg-[#6B4F3A] hover:bg-[#3B2A21] text-white rounded shadow-sm flex justify-center transition-colors"
-      @click.stop="selectCategory(category)"
+    <!-- Zone scrollable -->
+    <div
+      class="flex-1 overflow-y-auto flex flex-col items-center gap-2 p-2 touch-auto overscroll-contain"
     >
-      <Icon :name="category.icon" class="w-5 h-5" />
-    </button>
-    <!-- Bouton Bulldozer en bas -->
-    <button
-      :class="[
-        'p-2 w-full text-white rounded shadow-sm flex justify-center transition-colors',
-        isBulldozerActive
-          ? 'bg-[#E53935] hover:bg-[#C62828]'
-          : 'bg-[#8B3E2F] hover:bg-[#732F24]',
-      ]"
-      @click.stop="activateBulldozer"
-    >
-      <Icon name="mdi:shovel" class="w-5 h-5" />
-    </button>
+      <button
+        v-for="category in categories"
+        :key="category.name"
+        class="p-2 w-full bg-[#6B4F3A] hover:bg-[#3B2A21] text-white rounded shadow-sm flex justify-center transition-colors"
+        @click.stop="selectCategory(category)"
+      >
+        <Icon :name="category.icon" class="w-5 h-5" />
+      </button>
+    </div>
+
+    <!-- Bouton bulldozer juste après la zone scrollable -->
+    <div class="p-2">
+      <button
+        :class="[
+          'p-2 w-full text-white rounded shadow-sm flex justify-center transition-colors',
+          isBulldozerActive
+            ? 'bg-[#E53935] hover:bg-[#C62828]'
+            : 'bg-[#8B3E2F] hover:bg-[#732F24]',
+        ]"
+        @click.stop="activateBulldozer"
+      >
+        <Icon name="mdi:shovel" class="w-5 h-5" />
+      </button>
+    </div>
   </div>
 
   <SubMenu
