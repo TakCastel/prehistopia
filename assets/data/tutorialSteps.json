@@ -2,7 +2,7 @@
   {
     "id": "start",
     "title": "L'arrivée",
-    "flavorText": "Vous venez d’arriver sur une terre inconnue. Vos gens ont froid, ils serrent contre eux leurs maigres provisions, juste de quoi survivre les premiers jours. Ils lèvent les yeux vers le ciel, en quête d’un signe. Un feu pourrait les rassembler.",
+    "flavorText": "Une terre inconnue s’étend devant vous. Les membres de votre tribu ont froid et ne possèdent que quelques provisions pour survivre aux premiers jours. Leurs regards se tournent vers le ciel à la recherche d’un signe. Un feu pourrait les rassembler. ",
     "image": "/images/tutorial/start_fire.png",
     "explanation": "Ouvrez le menu situé à droite de l’écran pour accéder aux bâtiments essentiels. Sélectionnez le 'Feu de camp', puis placez-le dans une zone dégagée de la carte.",
     "check": "ALWAYS"

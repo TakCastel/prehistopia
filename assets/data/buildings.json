@@ -58,7 +58,7 @@
             "buildings": ["branch_hut"]
           },
           "income": {
-            "meat": 5,
+            "meat": 3,
             "gold": -5
           },
           "description": "Produit de la viande. Nécessite une hutte. Requis pour la fosse de tannage."
@@ -235,7 +235,7 @@
             "buildings": ["branch_hut"]
           },
           "income": {
-            "medicinalHerbs": 6,
+            "medicinalHerbs": 3,
             "gold": -15
           },
           "description": "Zone pour cueillir des herbes. Nécessite une hutte basique, ne peut se construire que dans les collines."
@@ -251,7 +251,7 @@
             "buildings": ["leather_shelter"]
           },
           "income": {
-            "roots": 8,
+            "roots": 4,
             "gold": -50
           },
           "description": "Produit des racines comestibles. Requiert un abri en peaux, ne peut se construire que dans les collines."
@@ -267,7 +267,7 @@
             "buildings": ["primitive_well", "family_house"]
           },
           "income": {
-            "wheat": 10,
+            "wheat": 5,
             "gold": -100
           },
           "description": "Produit du blé. Requiert une maison familiale et se construit autour d'un puits."
