@@ -19,7 +19,6 @@
             :requirements="unmetBuildingRequirements"
             :get-building-name="getBuildingName"
           />
-
           <BuildingCost
             :building="building"
             :get-resource-icon="getResourceIcon"
@@ -31,10 +30,8 @@
     <!-- zone tampon invisible entre le bouton et la carte -->
     <div class="absolute right-full top-0 h-full w-6" />
 
-    <!-- carte à gauche, reste visible tant qu'on survole elle OU le bouton OU la zone tampon -->
-    <div
-      class="invisible group-hover:visible absolute right-[calc(100%+.6rem)] top-0"
-    >
+    <!-- ✅ carte flottante visible au hover -->
+    <div class="absolute right-[calc(100%+0.6rem)] top-0 z-50">
       <BuildingCard :building="building" :building-config="buildingConfig" />
     </div>
   </div>

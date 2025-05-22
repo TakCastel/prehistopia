@@ -5,7 +5,7 @@
   >
     <!-- Zone scrollable -->
     <div
-      class="flex-1 overflow-y-auto flex flex-col items-center gap-2 p-2 touch-auto overscroll-contain"
+      class="flex-1 min-h-0 overflow-y-auto overflow-x-visible flex flex-col items-center gap-2 p-2 touch-auto overscroll-contain"
     >
       <button
         v-for="category in categories"
@@ -17,8 +17,8 @@
       </button>
     </div>
 
-    <!-- Bouton bulldozer juste après la zone scrollable -->
-    <div class="p-2">
+    <!-- Bouton bulldozer -->
+    <div class="p-2 border-t border-[#3B2A21]">
       <button
         :class="[
           'p-2 w-full text-white rounded shadow-sm flex justify-center transition-colors',
