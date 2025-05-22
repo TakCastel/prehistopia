@@ -5,6 +5,7 @@ import { generateMapData } from "@/utils/mapGenerator";
 import localforage from "localforage";
 import buildingsData from "@/assets/data/buildings.json";
 import { useAlertStore } from "@/stores/useAlertStore";
+import { useMeepleStore } from "@/stores/useMeepleStore";
 
 const TILE_WIDTH = 64;
 const TILE_HEIGHT = 32;
@@ -30,6 +31,7 @@ export const useMapStore = defineStore(
     const map = ref([]);
     const selectedBuilding = ref(null);
     const terrainTypes = ["water", "grass", "hills", "mountain"];
+    const needsRedraw = ref(false);
 
     function generateMap() {
       const newMap = generateMapData(cols.value, rows.value);
@@ -66,12 +68,14 @@ export const useMapStore = defineStore(
         { name: "knowledge_stone", src: "/images/knowledge_stone.png" },
         { name: "experimental_lab", src: "/images/experimental_lab.png" },
         { name: "ruin", src: "/images/ruin.png" },
+        { name: "meeple", src: "/images/meeple.png" },
+        { name: "meeple_h", src: "/images/meeple_h.png" },
+        { name: "meeple_f", src: "/images/meeple_f.png" },
       ]);
 
       console.log("📦 Map state before loading from storage:", map.value);
 
       await loadMap();
-
       draw(canvas);
     }
 
@@ -83,35 +87,116 @@ export const useMapStore = defineStore(
       ctx.clearRect(0, 0, width, height);
       ctx.save();
 
-      // Applique le zoom ici
       ctx.translate(width / 2, height / 2);
       ctx.scale(camera.zoom, camera.zoom);
       ctx.translate(camera.x, camera.y);
 
+      const { meeples, moveMeeples, syncMeeplesWithPopulation } =
+        useMeepleStore();
+      const drawQueue = [];
+
+      // Toutes les cases : tuiles + bâtiments
       for (let y = 0; y < rows.value; y++) {
         for (let x = 0; x < cols.value; x++) {
-          const screenX = (x - y) * (TILE_WIDTH / 2);
-          const screenY = (x + y) * (TILE_HEIGHT / 2);
-          drawTile(ctx, screenX, screenY, x, y, hoveredTile, canvas);
+          const { x: screenX, y: screenY } = getScreenCoords(x, y);
+          const depth = x + y;
+
+          drawQueue.push({
+            type: "tile",
+            depth,
+            screenX,
+            screenY,
+            x,
+            y,
+          });
+
+          drawQueue.push({
+            type: "building",
+            depth: depth + 0.5, // au-dessus du sol et meeple
+            screenX,
+            screenY,
+            x,
+            y,
+          });
         }
       }
+
+      // Meeples (coordonnées visuelles réelles)
+      const offsetMap = new Map();
+
+      for (const meeple of meeples) {
+        const key = `${meeple.x},${meeple.y}`;
+        const count = offsetMap.get(key) || 0;
+        offsetMap.set(key, count + 1);
+
+        const drawX = (meeple.drawX - meeple.drawY) * (TILE_WIDTH / 2);
+        const drawY = (meeple.drawX + meeple.drawY) * (TILE_HEIGHT / 2);
+
+        const offset = (count - 1) * 6; // 6px de décalage par meeple
+        const depth = meeple.drawX + meeple.drawY;
+
+        const time = performance.now();
+        const hop = Math.sin(time / 60 + meeple.hopPhase) * 0.4;
+
+        drawQueue.push({
+          type: "meeple",
+          depth: meeple.drawX + meeple.drawY + 0.8,
+          screenX: drawX + offset,
+          screenY: drawY + hop,
+          flip: meeple.facing === "left", // 👈 on ajoute ça
+        });
+      }
+
+      // Tri de la pile par profondeur
+      drawQueue.sort((a, b) => a.depth - b.depth);
+
+      // Rendu
+      for (const item of drawQueue) {
+        if (item.type === "tile") {
+          drawTileBase(
+            ctx,
+            item.screenX,
+            item.screenY,
+            item.x,
+            item.y,
+            hoveredTile,
+            canvas
+          );
+        } else if (item.type === "building") {
+          drawBuildingAt(ctx, item.screenX, item.screenY, item.x, item.y);
+        } else if (item.type === "meeple") {
+          if (item.type === "meeple") {
+            drawImageAt(
+              ctx,
+              "meeple",
+              item.screenX,
+              item.screenY,
+              "small",
+              1,
+              item.flip // 👈 ici c’est disponible
+            );
+          }
+        }
+      }
+
+      ctx.restore();
 
       const resourceStore = useResourceStore();
       resourceStore.updatePopulation(map.value);
       resourceStore.monitorFoodCrisis(map);
-
-      ctx.restore();
+      syncMeeplesWithPopulation();
+      moveMeeples();
     }
 
-    function drawTile(ctx, x, y, gridX, gridY, hoveredTile, canvas) {
-      const cell = map.value[gridY]?.[gridX];
+    function getScreenCoords(x, y) {
+      return {
+        x: (x - y) * (TILE_WIDTH / 2),
+        y: (x + y) * (TILE_HEIGHT / 2),
+      };
+    }
 
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(x + TILE_WIDTH / 2, y + TILE_HEIGHT / 2);
-      ctx.lineTo(x, y + TILE_HEIGHT);
-      ctx.lineTo(x - TILE_WIDTH / 2, y + TILE_HEIGHT / 2);
-      ctx.closePath();
+    function drawTileBase(ctx, x, y, gridX, gridY, hoveredTile, canvas) {
+      const cell = map.value[gridY]?.[gridX];
 
       const terrainColors = {
         water: "#4A90E2",
@@ -120,13 +205,18 @@ export const useMapStore = defineStore(
         mountain: "#8B8B8B",
       };
 
-      ctx.fillStyle = terrainColors[cell?.terrainType] || "#3b3b3b";
+      // Fond de tuile
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + TILE_WIDTH / 2, y + TILE_HEIGHT / 2);
+      ctx.lineTo(x, y + TILE_HEIGHT);
+      ctx.lineTo(x - TILE_WIDTH / 2, y + TILE_HEIGHT / 2);
+      ctx.closePath();
 
-      // 1. Fond de la case
       ctx.fillStyle = terrainColors[cell?.terrainType] || "#3b3b3b";
       ctx.fill();
 
-      // 2. Filtre rouge semi-transparent si case invalide
+      // Overlay rouge si placement invalide
       if (
         selectedBuilding.value &&
         selectedBuilding.value !== "bulldozer" &&
@@ -140,25 +230,29 @@ export const useMapStore = defineStore(
       ctx.strokeStyle = "rgba(0, 0, 0, 0.1)";
       ctx.stroke();
 
+      // Gestion du survol
       if (hoveredTile?.x === gridX && hoveredTile?.y === gridY) {
         if (selectedBuilding.value === "bulldozer" && cell?.building) {
-          ctx.fillStyle = "rgba(139, 62, 47, 0.3)"; // #8B3E2F avec 30% d’opacité
+          ctx.fillStyle = "rgba(139, 62, 47, 0.3)";
           canvas.style.cursor = "crosshair";
         } else {
-          // ✨ Survol normal
           ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
           canvas.style.cursor = "pointer";
         }
-
         ctx.fill();
 
-        // 👷‍♂️ Affiche le bâtiment fantôme sauf en mode bulldozer
         if (selectedBuilding.value && selectedBuilding.value !== "bulldozer") {
           drawImageAt(ctx, selectedBuilding.value, x, y, "normal", 0.5);
         }
       } else {
         canvas.style.cursor = "default";
       }
+    }
+
+    function drawBuildingAt(ctx, x, y, gridX, gridY) {
+      if (!map.value[gridY] || !map.value[gridY][gridX]) return;
+
+      const cell = map.value[gridY][gridX];
 
       if (cell?.terrainType === "mountain") {
         drawImageAt(ctx, "mountain", x, y, "large");
@@ -171,13 +265,11 @@ export const useMapStore = defineStore(
       }
 
       if (cell.building && cell.inactive) {
-        // rond blanc derrière
         ctx.beginPath();
         ctx.arc(x, y - TILE_HEIGHT / 8, 10, 0, Math.PI * 2);
         ctx.fillStyle = "white";
         ctx.fill();
 
-        // icône ⚠
         ctx.fillStyle = "#FF3B3B";
         ctx.font = "bold 14px sans-serif";
         ctx.textAlign = "center";
@@ -186,7 +278,15 @@ export const useMapStore = defineStore(
       }
     }
 
-    function drawImageAt(ctx, name, x, y, size = "normal", alpha = 1) {
+    function drawImageAt(
+      ctx,
+      name,
+      x,
+      y,
+      size = "normal",
+      alpha = 1,
+      flip = false
+    ) {
       const img = getImage(name);
       if (!img || !img.complete) return;
 
@@ -194,9 +294,9 @@ export const useMapStore = defineStore(
 
       switch (size) {
         case "small":
-          drawWidth = TILE_WIDTH * 0.45;
-          drawHeight = TILE_HEIGHT * 0.9;
-          offsetYFactor = 1.2; // Remonte un peu plus
+          drawWidth = TILE_WIDTH * 0.25;
+          drawHeight = TILE_HEIGHT * 0.5;
+          offsetYFactor = 1.4;
           break;
         case "large":
           drawWidth = TILE_WIDTH * 1.1;
@@ -215,7 +315,20 @@ export const useMapStore = defineStore(
 
       ctx.save();
       ctx.globalAlpha = alpha;
-      ctx.drawImage(img, x - offsetX, y - offsetY, drawWidth, drawHeight);
+
+      if (name === "meeple" && flip) {
+        ctx.scale(-1, 1);
+        ctx.drawImage(
+          img,
+          -(x + drawWidth - offsetX),
+          y - offsetY,
+          drawWidth,
+          drawHeight
+        );
+      } else {
+        ctx.drawImage(img, x - offsetX, y - offsetY, drawWidth, drawHeight);
+      }
+
       ctx.restore();
     }
 
@@ -259,7 +372,7 @@ export const useMapStore = defineStore(
       return null;
     }
 
-    async function placeBuildingAt(x, y, canvasEl, event) {
+    async function placeBuildingAt(x, y, canvasEl) {
       const cell = map.value[y]?.[x];
       const resourceStore = useResourceStore(); // ✅ déplacement ici
 
@@ -289,6 +402,7 @@ export const useMapStore = defineStore(
           cell.building = null;
 
           await saveMap();
+          resourceStore.updatePopulation(map.value);
           draw(canvasEl);
           return true;
         } else {
@@ -331,10 +445,13 @@ export const useMapStore = defineStore(
       }
 
       cell.building = selectedBuilding.value;
+      map.value[y][x] = { ...cell }; // ✅ force la réactivité
+
       console.log(
         `✅ Placed ${selectedBuilding.value} at [${x}, ${y}] for ${goldCost} gold.`
       );
 
+      // Libère la sélection uniquement pour les bâtiments non-logement
       const housingBuildings = [
         "campfire",
         "storage_shelter",
@@ -346,12 +463,12 @@ export const useMapStore = defineStore(
         "knowledge_stone",
         "experimental_lab",
       ];
-
       if (housingBuildings.includes(selectedBuilding.value)) {
         selectedBuilding.value = null;
       }
 
       await saveMap();
+      resourceStore.updatePopulation(map.value); // ✅ met à jour la pop immédiatement
       draw(canvasEl);
       return true;
     }

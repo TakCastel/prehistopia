@@ -18,8 +18,14 @@
       <div class="text-xs font-semibold mb-1">Coût :</div>
       <ul class="text-xs flex flex-col gap-1">
         <li v-if="building.cost?.gold" class="flex items-center gap-1">
-          <Icon name="fluent-emoji:coin" class="w-4 h-4 text-yellow-500" />
-          <span>Or : {{ building.cost.gold.toLocaleString("fr-FR") }}</span>
+          <Icon
+            name="fluent-emoji:spiral-shell"
+            class="w-4 h-4 text-yellow-500"
+          />
+          <span
+            >Coquillages :
+            {{ building.cost.gold.toLocaleString("fr-FR") }}</span
+          >
         </li>
         <li
           v-for="(amount, resource) in filteredResourceCosts"
@@ -65,7 +71,7 @@
           <Icon
             :name="
               resource === 'gold'
-                ? 'fluent-emoji:coin'
+                ? 'fluent-emoji:spiral-shell'
                 : getResourceIcon(resource)
             "
             class="w-4 h-4"
@@ -159,7 +165,7 @@ function getResourceIcon(resource) {
     stone: "game-icons:stone-block",
     meat: "mdi:food-steak",
     faith: "mdi:star-face",
-    gold: "fluent-emoji:coin", // fallback, déjà géré séparément
+    gold: "fluent-emoji:spiral-shell", // fallback, déjà géré séparément
   };
   return icons[resource] || "mdi:help-circle-outline";
 }
@@ -193,7 +199,7 @@ function getResourceLabel(resource) {
     stone: "Pierre",
     meat: "Viande",
     faith: "Foi",
-    gold: "Or",
+    gold: "Coquillages",
   };
   return labels[resource] || resource;
 }

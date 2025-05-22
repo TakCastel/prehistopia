@@ -2,7 +2,7 @@
   {
     "id": "start",
     "title": "L'arrivée",
-    "flavorText": "Vous venez d’arriver sur une terre inconnue. Vos colons grelottent, serrant contre eux leurs maigres provisions, juste de quoi survivre aux premiers jours. Ils lèvent les yeux vers le ciel, en quête d’un signe. Un feu pourrait les rassembler.",
+    "flavorText": "Vous venez d’arriver sur une terre inconnue. Vos gens ont froid, ils serrent contre eux leurs maigres provisions, juste de quoi survivre les premiers jours. Ils lèvent les yeux vers le ciel, en quête d’un signe. Un feu pourrait les rassembler.",
     "image": "/images/tutorial/start_fire.png",
     "explanation": "Ouvrez le menu situé à droite de l’écran pour accéder aux bâtiments essentiels. Sélectionnez le 'Feu de camp', puis placez-le dans une zone dégagée de la carte.",
     "check": "ALWAYS"
@@ -28,7 +28,7 @@
     "title": "La roche",
     "flavorText": "Les chasseurs ramènent de quoi manger, mais vos outils restent rudimentaires. Pour construire davantage, il va falloir extraire et utiliser la pierre.",
     "image": "/images/tutorial/stone_quarry.png",
-    "explanation": "Attendez d'avoir l'or nécessaire et construisez une carrière de pierre. Ce bâtiment ne peut être placé que près des montagnes : cherchez un terrain adjacent à une zone rocheuse grise.",
+    "explanation": "Attendez d'avoir les coquillages nécessaires et construisez une carrière de pierre. Ce bâtiment ne peut être placé que près des montagnes : cherchez un terrain adjacent à une zone rocheuse grise.",
     "check": "hunting_traps >= 1"
   },
   {
@@ -44,7 +44,7 @@
     "title": "L'entretien",
     "flavorText": "Le village entre dans une nouvelle phase. Les premiers ateliers transforment les ressources, et l’organisation du travail devient essentielle.",
     "image": "/images/tutorial/economy_warning.png",
-    "explanation": "La plupart des bâtiments coûtent de l’or en entretien et produisent des ressources. Si un bâtiment affiche une icône de danger, c’est qu’il manque de main d'oeuvre pour fonctionner. Avancez dans la construction de votre village jusqu'à pouvoir construire votre premier abri en peau.",
+    "explanation": "La plupart des bâtiments coûtent des coquillages en entretien et produisent des ressources. Si un bâtiment affiche une icône de danger, c’est qu’il manque de main d'œuvre pour fonctionner. Avancez dans la construction de votre village jusqu'à pouvoir construire votre premier abri en peau.",
     "check": "stonecutter >= 1 AND tanning_pit >= 1"
   },
   {
@@ -60,7 +60,7 @@
     "title": "Ce qui s’effondre",
     "flavorText": "Une habitation s’est effondrée. Faute de nourriture, ses occupants ont fui ou disparu. Sans ressources, le village commence à se vider.",
     "image": "/images/tutorial/ruin_warning.png",
-    "explanation": "Sans nourriture, vos colons fuient ou disparaissent. Plus la famine dure, plus les habitations s’effondrent. Il faut agir vite pour nourrir votre village.",
+    "explanation": "Sans nourriture, vos gens fuient ou disparaissent. Plus la famine dure, plus les habitations s’effondrent. Il faut agir vite pour nourrir votre village.",
     "check": "ruin >= 1"
   },
   {
@@ -70,5 +70,13 @@
     "image": "/images/tutorial/primitive_farm.png",
     "explanation": "Félicitations, vous avez accompli les étapes fondamentales pour assurer la survie et le développement de votre village. Vous pouvez maintenant continuer, ou recommencer pour bâtir une nouvelle colonie.",
     "check": "primitive_farm >= 1"
+  },
+  {
+    "id": "debtWarning",
+    "title": "Plus un coquillage",
+    "flavorText": "On raconte que les premières tribus troquaient des coquillages. Aujourd’hui, votre peuple n’en a plus. Certains proposent de démonter les structures les moins utiles.",
+    "image": "/images/tutorial/debt_warning.png",
+    "explanation": "Votre réserve de coquillages est tombée en dessous de zéro. Cela signifie que vos revenus ne couvrent plus les dépenses. Supprimez les bâtiments les plus couteux pour rétablir l’équilibre.",
+    "check": "gold < 0"
   }
 ]

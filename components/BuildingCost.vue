@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-wrap items-center gap-2 mt-1">
-    <!-- Or -->
+    <!-- Coquillages -->
     <span
       class="text-xs flex items-center gap-1"
       :class="
@@ -12,7 +12,7 @@
       <span
         class="w-5 h-5 rounded-full bg-[#2E211B] flex items-center justify-center"
       >
-        <Icon name="fluent-emoji:coin" class="w-3.5 h-3.5" />
+        <Icon name="fluent-emoji:spiral-shell" class="w-3.5 h-3.5" />
       </span>
       <span>{{ building.cost.gold.toLocaleString("fr-FR") }}</span>
     </span>

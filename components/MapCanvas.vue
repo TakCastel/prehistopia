@@ -60,6 +60,22 @@ function handleMouseMove(event) {
   }
 }
 
+let animationFrameId;
+
+function startAnimationLoop() {
+  const render = () => {
+    if (canvas.value) {
+      mapStore.draw(canvas.value, hoveredTile);
+    }
+    animationFrameId = requestAnimationFrame(render);
+  };
+  animationFrameId = requestAnimationFrame(render);
+}
+
+function stopAnimationLoop() {
+  cancelAnimationFrame(animationFrameId);
+}
+
 function handleMouseUp(event) {
   const canvasEl = event.target;
 
@@ -107,6 +123,9 @@ onMounted(async () => {
   await nextTick();
   await mapStore.initCanvas(canvas.value);
 
+  startAnimationLoop();
+  useMeepleStore().startContinuousMovement();
+
   // 💰 Démarre la génération des ressources automatiques
   resourceStore.startResourceIncome(mapStore.map); // Direct, pas de conditions
 
@@ -115,6 +134,8 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
+  stopAnimationLoop();
+
   window.removeEventListener("resize", () => mapStore.draw(canvas.value));
   window.removeEventListener("keydown", handleKeydown);
 });

@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 import buildingsData from "@/assets/data/buildings.json";
 import { useAlertStore } from "@/stores/useAlertStore";
+import { useMeepleStore } from "#imports";
 
 export const useResourceStore = defineStore(
   "resource",
@@ -214,6 +215,9 @@ export const useResourceStore = defineStore(
         }
       }
       population.value = total;
+
+      const meepleStore = useMeepleStore();
+      meepleStore.syncMeeplesWithPopulation();
     }
 
     let famineTimer = null;

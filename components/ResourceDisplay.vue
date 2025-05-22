@@ -2,7 +2,7 @@
   <div class="flex items-center gap-4">
     <!-- Or -->
     <div class="flex items-center gap-1">
-      <Icon name="fluent-emoji:coin" class="w-5 h-5" />
+      <Icon name="fluent-emoji:spiral-shell" class="w-5 h-5" />
       <span class="text-sm">{{ gold.toLocaleString("fr-FR") }}</span>
     </div>
 

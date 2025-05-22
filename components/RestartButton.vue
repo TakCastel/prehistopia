@@ -54,11 +54,13 @@
 import { ref } from "vue";
 import { useResourceStore } from "@/stores/useResourceStore";
 import { useMapStore } from "@/stores/useMapStore";
+import { useMeepleStore } from "@/stores/useMeepleStore";
 
 const showModal = ref(false);
 
 const resourceStore = useResourceStore();
 const mapStore = useMapStore();
+const meepleStore = useMeepleStore();
 
 function confirmRestart() {
   // 🪙 Reset des ressources
@@ -69,7 +71,10 @@ function confirmRestart() {
   mapStore.generateMap();
   mapStore.saveMap();
 
-  // (Optionnel) Reset de la caméra si tu veux recentrer la vue :
+  // 👥 Reset des meeples
+  meepleStore.resetMeeples();
+
+  // Reset de la caméra si besoin
   mapStore.camera.x = 0;
   mapStore.camera.y = 0;
 

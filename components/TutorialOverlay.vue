@@ -57,9 +57,11 @@ import {
   onBeforeUnmount,
 } from "vue";
 import { useMapStore } from "@/stores/useMapStore";
+import { useResourceStore } from "@/stores/useResourceStore";
 import rawSteps from "@/assets/data/tutorialSteps.json";
 
 const mapStore = useMapStore();
+const resourceStore = useResourceStore();
 const seenSteps = ref(new Set());
 const currentStep = ref(null);
 let lastStepId = null;
@@ -100,14 +102,34 @@ function skipAllTutorials() {
   );
 }
 
-// ⛏️ Parser de condition de type "branch_hut >= 3"
 function evalCheck(expr, counts) {
   if (expr === "ALWAYS") return true;
-  const match = expr.match(/^(\w+)\s*(>=?)\s*(\d+)$/);
+
+  const match = expr.match(/^(\w+)\s*(<=|>=|==|!=|<|>)\s*(-?\d+)$/);
   if (!match) return false;
-  const [, building, op, value] = match;
-  const count = counts[building] || 0;
-  return op === ">=" ? count >= +value : count > +value;
+
+  const [, key, op, value] = match;
+  const num = Number(value);
+
+  const val =
+    resourceStore[key] !== undefined ? resourceStore[key] : counts[key] || 0;
+
+  switch (op) {
+    case ">=":
+      return val >= num;
+    case "<=":
+      return val <= num;
+    case ">":
+      return val > num;
+    case "<":
+      return val < num;
+    case "==":
+      return val === num;
+    case "!=":
+      return val !== num;
+    default:
+      return false;
+  }
 }
 
 // Enrichit les steps avec leur condition d’apparition
