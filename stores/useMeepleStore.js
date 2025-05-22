@@ -17,6 +17,7 @@ export const useMeepleStore = defineStore("meeple", () => {
       drawY: y,
       speed: 0.001 + Math.random() * 0.002,
       hopPhase: Math.random() * Math.PI * 2,
+      type: Math.random() < 0.5 ? "f" : "h",
     });
   }
 
@@ -87,6 +88,13 @@ export const useMeepleStore = defineStore("meeple", () => {
       } else {
         meeple.drawX += (dx / distance) * step;
         meeple.drawY += (dy / distance) * step;
+
+        // 👇 Mise à jour du facing pendant le déplacement
+        if (dx < 0) {
+          meeple.facing = "left";
+        } else if (dx > 0) {
+          meeple.facing = "right";
+        }
       }
     }
   }

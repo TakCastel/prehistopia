@@ -2,27 +2,30 @@
   <div class="w-full h-full flex items-center justify-center">
     <canvas
       ref="canvas"
-      class="absolute inset-0 w-full h-full bg-zinc-900"
+      class="absolute inset-0 w-full h-full touch-none bg-zinc-900"
       @mousedown="handleMouseDown"
       @mousemove="handleMouseMove"
       @mouseup="handleMouseUp"
       @mouseleave="handleMouseUp"
       @wheel.prevent="handleWheel"
+      @touchstart="handleTouchStart"
+      @touchmove="handleTouchMove"
+      @touchend="handleTouchEnd"
     />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, nextTick } from "vue";
 import { useResourceStore } from "@/stores/useResourceStore";
 import { useMapStore } from "@/stores/useMapStore";
+import { useMeepleStore } from "@/stores/useMeepleStore";
 
 const mapStore = useMapStore();
 const resourceStore = useResourceStore();
 
 const canvas = ref(null);
 let hoveredTile = null;
-const zoomLevel = 1;
 const minZoom = 0.5;
 const maxZoom = 3;
 
@@ -32,11 +35,11 @@ function handleMouseDown(event) {
   mapStore.camera.lastY = event.clientY;
   mapStore.camera.startX = event.clientX;
   mapStore.camera.startY = event.clientY;
-  event.target.style.cursor = "grabbing";
+  canvas.value.style.cursor = "grabbing";
 }
 
 function handleMouseMove(event) {
-  const canvasEl = event.target;
+  const canvasEl = canvas.value;
 
   if (mapStore.camera.isDragging) {
     const dx = event.clientX - mapStore.camera.lastX;
@@ -60,6 +63,67 @@ function handleMouseMove(event) {
   }
 }
 
+function handleMouseUp(event) {
+  const canvasEl = canvas.value;
+  mapStore.camera.isDragging = false;
+  canvasEl.style.cursor = "default";
+
+  const clientX = event?.clientX ?? mapStore.camera.lastX;
+  const clientY = event?.clientY ?? mapStore.camera.lastY;
+
+  const moved =
+    Math.abs(clientX - mapStore.camera.startX) > 5 ||
+    Math.abs(clientY - mapStore.camera.startY) > 5;
+
+  if (moved) return;
+
+  const { x, y } = mapStore.screenToIso(clientX, clientY, canvasEl);
+  const cell = mapStore.map[y]?.[x];
+
+  if (x >= 0 && x < mapStore.cols && y >= 0 && y < mapStore.rows) {
+    mapStore.placeBuildingAt(x, y, canvasEl);
+  } else if (mapStore.selectedBuilding) {
+    mapStore.selectedBuilding = null;
+    mapStore.draw(canvasEl);
+  }
+}
+
+function handleWheel(event) {
+  event.preventDefault();
+
+  const zoomIntensity = 0.1;
+  const direction = event.deltaY > 0 ? -1 : 1;
+
+  mapStore.camera.zoom += direction * zoomIntensity;
+  mapStore.camera.zoom = Math.min(
+    Math.max(mapStore.camera.zoom, minZoom),
+    maxZoom
+  );
+
+  mapStore.draw(canvas.value);
+}
+
+function handleKeydown(e) {
+  if (e.code === "Escape") {
+    mapStore.selectedBuilding = null;
+    mapStore.draw(canvas.value);
+  }
+}
+
+function handleTouchStart(e) {
+  const touch = e.touches[0];
+  handleMouseDown({ clientX: touch.clientX, clientY: touch.clientY });
+}
+
+function handleTouchMove(e) {
+  const touch = e.touches[0];
+  handleMouseMove({ clientX: touch.clientX, clientY: touch.clientY });
+}
+
+function handleTouchEnd() {
+  handleMouseUp({});
+}
+
 let animationFrameId;
 
 function startAnimationLoop() {
@@ -76,47 +140,8 @@ function stopAnimationLoop() {
   cancelAnimationFrame(animationFrameId);
 }
 
-function handleMouseUp(event) {
-  const canvasEl = event.target;
-
-  mapStore.camera.isDragging = false;
-  canvasEl.style.cursor = "default";
-
-  const moved =
-    Math.abs(event.clientX - mapStore.camera.startX) > 5 ||
-    Math.abs(event.clientY - mapStore.camera.startY) > 5;
-
-  if (moved) return;
-
-  const { x, y } = mapStore.screenToIso(event.clientX, event.clientY, canvasEl);
-  const cell = mapStore.map[y]?.[x];
-
-  if (x >= 0 && x < mapStore.cols && y >= 0 && y < mapStore.rows) {
-    mapStore.placeBuildingAt(x, y, canvasEl);
-  } else if (mapStore.selectedBuilding) {
-    // Clic dans la zone noire → désélection
-    mapStore.selectedBuilding = null;
-    mapStore.draw(document.querySelector("canvas")); // force le redraw
-  }
-}
-
-function handleWheel(event) {
-  event.preventDefault();
-
-  const zoomIntensity = 0.1;
-  const direction = event.deltaY > 0 ? -1 : 1;
-
-  mapStore.camera.zoom += direction * zoomIntensity;
-  mapStore.camera.zoom = Math.min(Math.max(mapStore.camera.zoom, 0.5), 3);
-
+function handleResize() {
   mapStore.draw(canvas.value);
-}
-
-function handleKeydown(e) {
-  if (e.code === "Escape") {
-    mapStore.selectedBuilding = null;
-    mapStore.draw(canvas.value);
-  }
 }
 
 onMounted(async () => {
@@ -125,18 +150,16 @@ onMounted(async () => {
 
   startAnimationLoop();
   useMeepleStore().startContinuousMovement();
+  resourceStore.startResourceIncome(mapStore.map);
 
-  // 💰 Démarre la génération des ressources automatiques
-  resourceStore.startResourceIncome(mapStore.map); // Direct, pas de conditions
-
-  window.addEventListener("resize", () => mapStore.draw(canvas.value));
+  window.addEventListener("resize", handleResize);
   window.addEventListener("keydown", handleKeydown);
 });
 
 onBeforeUnmount(() => {
   stopAnimationLoop();
 
-  window.removeEventListener("resize", () => mapStore.draw(canvas.value));
+  window.removeEventListener("resize", handleResize);
   window.removeEventListener("keydown", handleKeydown);
 });
 </script>
@@ -145,5 +168,6 @@ onBeforeUnmount(() => {
 canvas {
   display: block;
   cursor: default;
+  touch-action: none;
 }
 </style>

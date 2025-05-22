@@ -143,7 +143,8 @@ export const useMapStore = defineStore(
           depth: meeple.drawX + meeple.drawY + 0.8,
           screenX: drawX + offset,
           screenY: drawY + hop,
-          flip: meeple.facing === "left", // 👈 on ajoute ça
+          flip: meeple.facing === "left",
+          sprite: meeple.type === "f" ? "meeple_f" : "meeple_h",
         });
       }
 
@@ -168,12 +169,12 @@ export const useMapStore = defineStore(
           if (item.type === "meeple") {
             drawImageAt(
               ctx,
-              "meeple",
+              item.sprite,
               item.screenX,
               item.screenY,
               "small",
               1,
-              item.flip // 👈 ici c’est disponible
+              item.flip
             );
           }
         }
