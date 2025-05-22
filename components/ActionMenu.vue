@@ -18,7 +18,7 @@
     </div>
 
     <!-- Bouton bulldozer -->
-    <div class="p-2 border-t border-[#3B2A21]">
+    <div class="p-2">
       <button
         :class="[
           'p-2 w-full text-white rounded shadow-sm flex justify-center transition-colors',

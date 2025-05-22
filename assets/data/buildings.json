@@ -98,7 +98,7 @@
             }
           },
           "income": {
-            "gold": 150
+            "gold": 75
           },
           "description": "Logement amélioré nécessitant un cercle de pierres et du cuir."
         },
@@ -116,7 +116,7 @@
             }
           },
           "income": {
-            "gold": 300
+            "gold": 100
           },
           "description": "Habitation avancée. Nécessite un atelier expérimental et de la poterie."
         }
