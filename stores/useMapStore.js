@@ -1,7 +1,11 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { loadImages, getImage } from "@/utils/imageLoader";
-import { generateMapData } from "@/utils/mapGenerator";
+import {
+  generateClassicMap,
+  generateDesertMap,
+  generateSnowMap,
+} from "@/utils/mapGenerator";
 import localforage from "localforage";
 import buildingsData from "@/assets/data/buildings.json";
 import { useAlertStore } from "@/stores/useAlertStore";
@@ -31,12 +35,20 @@ export const useMapStore = defineStore(
     const map = ref([]);
     const selectedBuilding = ref(null);
     const terrainTypes = ["water", "grass", "hills", "mountain"];
-    const needsRedraw = ref(false);
 
-    function generateMap() {
-      const newMap = generateMapData(cols.value, rows.value);
+    function generateMap(type = "classic") {
+      let newMap;
+      switch (type) {
+        case "desert":
+          newMap = generateDesertMap(cols.value, rows.value);
+          break;
+        case "snow":
+          newMap = generateSnowMap(cols.value, rows.value);
+          break;
+        default:
+          newMap = generateClassicMap(cols.value, rows.value);
+      }
 
-      // ✅ Vide le tableau réactif sans casser la référence
       map.value.splice(0, map.value.length, ...newMap);
     }
 
@@ -261,6 +273,10 @@ export const useMapStore = defineStore(
 
       if (cell?.building === "tree") {
         drawImageAt(ctx, "tree", x, y, "normal");
+      } else if (cell?.building === "palmtree") {
+        drawImageAt(ctx, "palmtree", x, y, "normal");
+      } else if (cell?.building === "pinetree") {
+        drawImageAt(ctx, "pinetree", x, y, "normal");
       } else if (cell?.building) {
         drawImageAt(ctx, cell.building, x, y);
       }

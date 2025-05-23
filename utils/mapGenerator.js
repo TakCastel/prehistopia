@@ -1,6 +1,6 @@
 import { findDistanceToTerrain } from "@/utils/distance";
 
-export function generateMapData(cols, rows) {
+function generateClassicMap(cols, rows) {
   const newMap = [];
   const centerX = Math.floor(cols / 2.5);
 
@@ -77,3 +77,57 @@ function generateTrees(map, cols, rows) {
     }
   }
 }
+
+function generateDesertMap(cols, rows) {
+  const map = [];
+
+  const oasisX = Math.floor(cols / 2);
+  const oasisY = Math.floor(rows / 2);
+
+  for (let y = 0; y < rows; y++) {
+    const row = [];
+    for (let x = 0; x < cols; x++) {
+      const dist = Math.hypot(x - oasisX, y - oasisY);
+      row.push({
+        id: `${x}-${y}`,
+        terrainType: dist < 3 ? "water" : "grass",
+        building: Math.random() < 0.05 && dist >= 3 ? "palmtree" : null,
+      });
+    }
+    map.push(row);
+  }
+
+  return map;
+}
+
+function generateSnowMap(cols, rows) {
+  const map = [];
+
+  const lakeCount = 3;
+  const lakes = Array.from({ length: lakeCount }, () => ({
+    x: Math.floor(Math.random() * cols),
+    y: Math.floor(Math.random() * rows),
+  }));
+
+  for (let y = 0; y < rows; y++) {
+    const row = [];
+    for (let x = 0; x < cols; x++) {
+      let terrain = "grass";
+      for (const lake of lakes) {
+        const dist = Math.hypot(x - lake.x, y - lake.y);
+        if (dist < 2) terrain = "water";
+      }
+
+      row.push({
+        id: `${x}-${y}`,
+        terrainType: terrain,
+        building: Math.random() < 0.05 ? "pinetree" : null,
+      });
+    }
+    map.push(row);
+  }
+
+  return map;
+}
+
+export { generateClassicMap, generateDesertMap, generateSnowMap };

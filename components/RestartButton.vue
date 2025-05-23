@@ -52,6 +52,8 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+
 import { useResourceStore } from "@/stores/useResourceStore";
 import { useMapStore } from "@/stores/useMapStore";
 import { useMeepleStore } from "@/stores/useMeepleStore";
@@ -61,6 +63,7 @@ const showModal = ref(false);
 const resourceStore = useResourceStore();
 const mapStore = useMapStore();
 const meepleStore = useMeepleStore();
+const router = useRouter();
 
 function confirmRestart() {
   // 🪙 Reset des ressources
@@ -88,5 +91,7 @@ function confirmRestart() {
       window.dispatchEvent(new Event("tutorial:reset"));
     }
   }, 2000);
+
+  router.push("/");
 }
 </script>
