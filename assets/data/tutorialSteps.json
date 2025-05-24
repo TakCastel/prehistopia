@@ -20,7 +20,7 @@
     "title": "La faim",
     "flavorText": "Le camp abrite maintenant plusieurs familles. Mais les ventres se vident et les réserves diminuent. Il faut trouver de la nourriture avant que la famine ne s’installe.",
     "image": "/images/tutorial/hunting_traps.png",
-    "explanation": "Placez une cabane de chasse pour produire de la viande et nourrir votre population. Ce bâtiment peut être installé sur n’importe quelle case libre.",
+    "explanation": "En haut à droite sont indiquiés votre nombre d'habitants. Pour chaque population, 1 ressource de nourriture sera régulièrement consommée. Placez une cabane de chasse pour produire de la viande et nourrir votre population.",
     "check": "branch_hut >= 3"
   },
   {
@@ -36,7 +36,7 @@
     "title": "Le dépôt",
     "flavorText": "La pierre s’accumule, mais sans lieu de stockage, le travail ralentit. Une tribu qui construit doit aussi savoir s’organiser.",
     "image": "/images/tutorial/storage_shelter.png",
-    "explanation": "Construisez un abri de stockage près de votre campement. C’est autour de cet abri que vous pourrez ensuite implanter vos bâtiments industriels. Commencez par placer un atelier de tailleur de pierre à côté de cet abri, et placez d'autres industries ensuite.",
+    "explanation": "Construisez un abri de stockage près de votre campement. C’est autour de cet abri que vous pourrez ensuite implanter vos bâtiments industriels. Commencez par placer un atelier de tailleur de pierre à côté de cet abri, et placez une fosse de tanage quand vous aurez créé suffisament d'outils.",
     "check": "stone_quarry >= 1"
   },
   {
@@ -52,7 +52,7 @@
     "title": "La liberté",
     "flavorText": "Avec un toit, de la nourriture et des outils, vos gens ne pensent plus seulement à survivre. Le village peut maintenant se développer selon votre vision.",
     "image": "/images/tutorial/faith_intro.png",
-    "explanation": "Vous êtes désormais libre de bâtir comme bon vous semble. Certains bâtiments, comme le feu de camp ou les monuments religieux, produisent de la foi. Cette ressource vous sera précieuse pour progresser vers de nouvelles ères.",
+    "explanation": "Vous êtes désormais libre de bâtir comme bon vous semble. Certains bâtiments, comme le feu de camp ou les monuments religieux, produisent de la foi. Cette ressource vous sera précieuse pour progresser vers de nouvelles ères. Avancez jusqu'à apporter la pierre des savoirs à votre tribu.",
     "check": "leather_shelter >= 1"
   },
   {

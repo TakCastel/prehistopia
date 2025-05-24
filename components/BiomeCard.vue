@@ -19,6 +19,15 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+import { useMapStore } from "@/stores/useMapStore";
+
+const mapStore = useMapStore();
+
+async function chooseBiome(type) {
+  mapStore.setMapType(type);
+  await nextTick(); // <-- attend que la réactivité se propage
+  router.push("/play");
+}
 
 const props = defineProps({
   type: String,
@@ -27,10 +36,6 @@ const props = defineProps({
 });
 
 const router = useRouter();
-
-function chooseBiome(type) {
-  router.push({ path: "/play", query: { biome: type } });
-}
 
 const borderColors = {
   classic: "border-[#4CAF50]",

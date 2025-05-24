@@ -5,6 +5,7 @@ import {
   generateClassicMap,
   generateDesertMap,
   generateSnowMap,
+  generateEmptyMap,
 } from "@/utils/mapGenerator";
 import localforage from "localforage";
 import buildingsData from "@/assets/data/buildings.json";
@@ -32,6 +33,7 @@ export const useMapStore = defineStore(
 
     const cols = ref(25);
     const rows = ref(25);
+    const mapType = ref("classic");
     const map = ref([]);
     const selectedBuilding = ref(null);
     const terrainTypes = ["water", "grass", "hills", "mountain"];
@@ -52,10 +54,23 @@ export const useMapStore = defineStore(
       map.value.splice(0, map.value.length, ...newMap);
     }
 
-    async function initCanvas(canvas) {
+    function generateBlankMap() {
+      const newMap = generateEmptyMap(cols.value, rows.value);
+      map.value.splice(0, map.value.length, ...newMap);
+    }
+
+    function setMapType(type) {
+      mapType.value = type;
+      console.log("setMapType dans le useMapStore:", mapType.value);
+    }
+
+    async function initCanvas(canvas, type = "classic") {
       await loadImages([
         { name: "tree", src: "/images/tree.png" },
+        { name: "palmtree", src: "/images/palmtree.png" },
+        { name: "pinetree", src: "/images/pinetree.png" },
         { name: "mountain", src: "/images/mountain.png" },
+        { name: "sanddune", src: "/images/sanddune.png" },
         { name: "campfire", src: "/images/campfire.png" },
         { name: "leather_shelter", src: "/images/leather_shelter.png" },
         { name: "storage_shelter", src: "/images/storage_shelter.png" },
@@ -85,9 +100,7 @@ export const useMapStore = defineStore(
         { name: "meeple_f", src: "/images/meeple_f.png" },
       ]);
 
-      console.log("📦 Map state before loading from storage:", map.value);
-
-      await loadMap();
+      await loadMap(type);
       draw(canvas);
     }
 
@@ -145,7 +158,6 @@ export const useMapStore = defineStore(
         const drawY = (meeple.drawX + meeple.drawY) * (TILE_HEIGHT / 2);
 
         const offset = (count - 1) * 6; // 6px de décalage par meeple
-        const depth = meeple.drawX + meeple.drawY;
 
         const time = performance.now();
         const hop = Math.sin(time / 60 + meeple.hopPhase) * 0.4;
@@ -211,11 +223,25 @@ export const useMapStore = defineStore(
     function drawTileBase(ctx, x, y, gridX, gridY, hoveredTile, canvas) {
       const cell = map.value[gridY]?.[gridX];
 
-      const terrainColors = {
-        water: "#4A90E2",
-        grass: "#7EC850",
-        hills: "#449130",
-        mountain: "#8B8B8B",
+      const biomePalettes = {
+        classic: {
+          water: "#4A90E2",
+          grass: "#7EC850",
+          hills: "#449130",
+          mountain: "#8B8B8B",
+        },
+        desert: {
+          water: "#40C4FF", // oasis bien visible
+          grass: "#FFD97D", // sable lumineux
+          hills: "#E8B243", // ocre chaud
+          mountain: "rgb(217 157 67)", // beige rocheux
+        },
+        snow: {
+          water: "#7BBCE5", // ❄️ bleu glacier plus visible
+          grass: "#F0F8FF", // 🌨️ neige claire (inchangé)
+          hills: "#BFCEDD", // ☁️ gris-bleu doux (entre neige et roche)
+          mountain: "#D6D6D6", // 🏔 neige tassée, plus gris que les collines
+        },
       };
 
       // Fond de tuile
@@ -226,7 +252,9 @@ export const useMapStore = defineStore(
       ctx.lineTo(x - TILE_WIDTH / 2, y + TILE_HEIGHT / 2);
       ctx.closePath();
 
-      ctx.fillStyle = terrainColors[cell?.terrainType] || "#3b3b3b";
+      const biome = mapType.value || "classic";
+      const palette = biomePalettes[biome] || biomePalettes.classic;
+      ctx.fillStyle = palette[cell?.terrainType] || "#3b3b3b";
       ctx.fill();
 
       // Overlay rouge si placement invalide
@@ -268,7 +296,16 @@ export const useMapStore = defineStore(
       const cell = map.value[gridY][gridX];
 
       if (cell?.terrainType === "mountain") {
-        drawImageAt(ctx, "mountain", x, y, "large");
+        const sprite =
+          mapType.value === "desert"
+            ? "sanddune"
+            : mapType.value === "snow"
+            ? "mountain"
+            : "mountain";
+
+        const yOffset = sprite === "sanddune" ? 6 : 0; // ⬇️ décale de 4px si dune
+
+        drawImageAt(ctx, sprite, x, y + yOffset, "large");
       }
 
       if (cell?.building === "tree") {
@@ -464,10 +501,6 @@ export const useMapStore = defineStore(
       cell.building = selectedBuilding.value;
       map.value[y][x] = { ...cell }; // ✅ force la réactivité
 
-      console.log(
-        `✅ Placed ${selectedBuilding.value} at [${x}, ${y}] for ${goldCost} gold.`
-      );
-
       // Libère la sélection uniquement pour les bâtiments non-logement
       const housingBuildings = [
         "campfire",
@@ -612,13 +645,12 @@ export const useMapStore = defineStore(
         // On transforme map en un simple tableau d'objets sérialisables
         const plainMap = JSON.parse(JSON.stringify(map.value));
         await localforage.setItem(MAP_STORAGE_KEY, plainMap);
-        console.log("💾 Map saved to storage.");
       } catch (err) {
         console.error("❌ Failed to save map:", err);
       }
     }
 
-    async function loadMap() {
+    async function loadMap(type = "classic") {
       try {
         const storedMap = await localforage.getItem(MAP_STORAGE_KEY);
         if (storedMap && Array.isArray(storedMap)) {
@@ -626,12 +658,12 @@ export const useMapStore = defineStore(
           console.log("📥 Map loaded from storage.");
         } else {
           console.log("📦 No saved map found, generating a new one.");
-          generateMap();
+          generateMap(type);
           await saveMap();
         }
       } catch (err) {
         console.error("❌ Failed to load map:", err);
-        generateMap();
+        generateMap(type);
         await saveMap();
       }
     }
@@ -646,6 +678,8 @@ export const useMapStore = defineStore(
       camera,
       cols,
       rows,
+      mapType,
+      setMapType,
       map,
       selectedBuilding,
       terrainTypes,
@@ -658,6 +692,7 @@ export const useMapStore = defineStore(
       getPlacedBuildings,
       resetMap,
       saveMap,
+      generateBlankMap,
     };
   },
   {

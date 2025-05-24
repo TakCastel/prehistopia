@@ -99,7 +99,7 @@ export const useResourceStore = defineStore(
       }
     }
 
-    function startResourceIncome(mapRef) {
+    function startResourceIncome(getMapFn) {
       console.log("🚀 startResourceIncome called");
 
       if (incomeStarted) {
@@ -110,7 +110,7 @@ export const useResourceStore = defineStore(
       incomeStarted = true;
 
       setInterval(() => {
-        const map = mapRef;
+        const map = getMapFn(); // 👈 appelée à chaque tick
         if (!Array.isArray(map) || map.length === 0) {
           console.warn("⚠️ Map is empty or not ready.");
           return;

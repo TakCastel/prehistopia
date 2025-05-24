@@ -78,7 +78,6 @@ function handleMouseUp(event) {
   if (moved) return;
 
   const { x, y } = mapStore.screenToIso(clientX, clientY, canvasEl);
-  const cell = mapStore.map[y]?.[x];
 
   if (x >= 0 && x < mapStore.cols && y >= 0 && y < mapStore.rows) {
     mapStore.placeBuildingAt(x, y, canvasEl);
@@ -146,11 +145,16 @@ function handleResize() {
 
 onMounted(async () => {
   await nextTick();
-  await mapStore.initCanvas(canvas.value);
+
+  while (!mapStore.mapType) {
+    await new Promise((r) => setTimeout(r, 50));
+  }
+
+  await mapStore.initCanvas(canvas.value, mapStore.mapType);
 
   startAnimationLoop();
   useMeepleStore().startContinuousMovement();
-  resourceStore.startResourceIncome(mapStore.map);
+  resourceStore.startResourceIncome(() => mapStore.map);
 
   window.addEventListener("resize", handleResize);
   window.addEventListener("keydown", handleKeydown);

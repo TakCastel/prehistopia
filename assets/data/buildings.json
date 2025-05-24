@@ -82,7 +82,7 @@
           "income": {
             "gold": 50
           },
-          "description": "Logement simple à construire autour d’un feu de camp (rayon 4)."
+          "description": "Logement simple à construire autour d’un feu de camp. (+ 1 pop)"
         },
         {
           "name": "Abri en peaux",
@@ -100,7 +100,7 @@
           "income": {
             "gold": 75
           },
-          "description": "Logement amélioré nécessitant un cercle de pierres et du cuir."
+          "description": "Logement amélioré nécessitant un cercle de pierres et du cuir. (+ 2 pop)"
         },
         {
           "name": "Maison familial",
@@ -118,7 +118,7 @@
           "income": {
             "gold": 100
           },
-          "description": "Habitation avancée. Nécessite un atelier expérimental et de la poterie."
+          "description": "Habitation avancée. Nécessite un atelier expérimental et de la poterie. (+ 5 pop)"
         }
       ]
     },
