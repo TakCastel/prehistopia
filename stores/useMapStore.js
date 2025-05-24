@@ -98,6 +98,7 @@ export const useMapStore = defineStore(
         { name: "meeple", src: "/images/meeple.png" },
         { name: "meeple_h", src: "/images/meeple_h.png" },
         { name: "meeple_f", src: "/images/meeple_f.png" },
+        { name: "wildlife", src: "/images/wildlife.png" },
       ]);
 
       await loadMap(type);
@@ -453,7 +454,12 @@ export const useMapStore = defineStore(
             );
           }
 
-          cell.building = null;
+          // 🦌 Si on supprime une cabane de chasse, on remet les animaux
+          if (cell.building === "hunting_traps") {
+            cell.building = "wildlife";
+          } else {
+            cell.building = null;
+          }
 
           await saveMap();
           resourceStore.updatePopulation(map.value);
@@ -477,7 +483,13 @@ export const useMapStore = defineStore(
       }
 
       // 🚧 Placement normal
-      if (cell.building || ["water", "mountain"].includes(cell.terrainType)) {
+      const b = selectedBuilding.value;
+
+      if (
+        (cell.building &&
+          !(cell.building === "wildlife" && b === "hunting_traps")) ||
+        ["water", "mountain"].includes(cell.terrainType)
+      ) {
         console.log("❌ Cannot place building here.");
         return false;
       }
@@ -496,6 +508,11 @@ export const useMapStore = defineStore(
       if (!resourceStore.spendResources(totalCost)) {
         console.warn("❌ Erreur lors de la dépense des ressources !");
         return false;
+      }
+
+      if (cell.building === "wildlife" && b === "hunting_traps") {
+        // On remplace le gibier par la cabane
+        console.log("🦌 Gibier remplacé par une cabane de chasse");
       }
 
       cell.building = selectedBuilding.value;
@@ -525,16 +542,16 @@ export const useMapStore = defineStore(
 
     function isPlacementValid(x, y) {
       const cell = map.value[y]?.[x];
+      const b = selectedBuilding.value;
 
       if (
         !cell ||
-        cell.building ||
+        (cell.building &&
+          !(b === "hunting_traps" && cell.building === "wildlife")) ||
         ["water", "mountain"].includes(cell.terrainType)
       ) {
         return false;
       }
-
-      const b = selectedBuilding.value;
 
       const uniqueBuildings = ["knowledge_stone", "experimental_lab"];
       if (uniqueBuildings.includes(b)) {
@@ -559,9 +576,7 @@ export const useMapStore = defineStore(
         const radius = 3;
         for (let dy = -radius; dy <= radius; dy++) {
           for (let dx = -radius; dx <= radius; dx++) {
-            // Supprime les coins
             if (Math.abs(dx) === radius && Math.abs(dy) === radius) continue;
-
             const neighbor = map.value[y + dy]?.[x + dx];
             if (neighbor?.building === "campfire") return true;
           }
@@ -570,11 +585,11 @@ export const useMapStore = defineStore(
       }
 
       const restrictedToHills = ["gathering_area", "root_field"];
-      if (restrictedToHills.includes(selectedBuilding.value)) {
+      if (restrictedToHills.includes(b)) {
         return cell.terrainType === "hills";
       }
 
-      if (selectedBuilding.value === "primitive_well") {
+      if (b === "primitive_well") {
         const range = 1;
         for (let dy = -range; dy <= range; dy++) {
           for (let dx = -range; dx <= range; dx++) {
@@ -585,7 +600,7 @@ export const useMapStore = defineStore(
         return false;
       }
 
-      if (selectedBuilding.value === "primitive_farm") {
+      if (b === "primitive_farm") {
         const range = 1;
         for (let dy = -range; dy <= range; dy++) {
           for (let dx = -range; dx <= range; dx++) {
@@ -596,7 +611,6 @@ export const useMapStore = defineStore(
         return false;
       }
 
-      // 🏭 Industries à distance de 1 max (carré 3x3)
       const industrialBuildings = [
         "stonecutter",
         "basic_sawmill",
@@ -614,7 +628,6 @@ export const useMapStore = defineStore(
         return false;
       }
 
-      // 🪨 Mines à distance 1 (croix et diagonale) autour de montagnes
       if (b === "stone_quarry") {
         for (let dy = -1; dy <= 1; dy++) {
           for (let dx = -1; dx <= 1; dx++) {
@@ -626,7 +639,10 @@ export const useMapStore = defineStore(
         return false;
       }
 
-      // Tous les autres peuvent être placés librement si case vide
+      if (b === "hunting_traps") {
+        return cell.building === "wildlife";
+      }
+
       return true;
     }
 

@@ -4,7 +4,7 @@
     "title": "L'arrivée",
     "flavorText": "Une terre inconnue s’étend devant vous. Les membres de votre tribu ont froid et ne possèdent que quelques provisions pour survivre aux premiers jours. Leurs regards se tournent vers le ciel à la recherche d’un signe. Un feu pourrait les rassembler. ",
     "image": "/images/tutorial/start_fire.png",
-    "explanation": "Ouvrez le menu situé à droite de l’écran pour accéder aux bâtiments essentiels. Sélectionnez le 'Feu de camp', puis placez-le dans une zone dégagée de la carte.",
+    "explanation": "Cliquez sur le menu situé à droite de l’écran : c’est là que vous trouverez les bâtiments disponibles.\n\nCommencez par sélectionner le 'Feu de camp'.\n\nEnsuite, placez-le dans une zone dégagée de la carte, là où rien ne gêne la construction.\n\nCe feu marquera le début de votre village.",
     "check": "ALWAYS"
   },
   {
@@ -12,7 +12,7 @@
     "title": "Les foyers",
     "flavorText": "Ils se sont approchés du feu, d’abord pour sa chaleur, puis pour parler, puis pour s’organiser. Ce feu n’est plus seulement un abri : c’est le centre du camp. Une nouvelle vie commence à se structurer.",
     "image": "/images/tutorial/fire_unlocked.png",
-    "explanation": "Vous pouvez désormais construire des habitations autour du feu. Celles-ci doivent impérativement être placées dans son rayon d’influence. N’hésitez pas à déboiser quelques arbres avec l'outil 'pelle' pour libérer suffisamment d’espace.",
+    "explanation": "Vous pouvez désormais construire des habitations autour du feu de camp.\n\nAttention : elles doivent impérativement être placées dans son rayon d’influence (à quelques cases autour).\n\nS’il n’y a pas assez de place, n’hésitez pas à utiliser l’outil 'pelle' pour couper quelques arbres et libérer de l’espace.",
     "check": "campfire >= 1"
   },
   {
@@ -20,7 +20,7 @@
     "title": "La faim",
     "flavorText": "Le camp abrite maintenant plusieurs familles. Mais les ventres se vident et les réserves diminuent. Il faut trouver de la nourriture avant que la famine ne s’installe.",
     "image": "/images/tutorial/hunting_traps.png",
-    "explanation": "En haut à droite sont indiquiés votre nombre d'habitants. Pour chaque population, 1 ressource de nourriture sera régulièrement consommée. Placez une cabane de chasse pour produire de la viande et nourrir votre population.",
+    "explanation": "En haut à droite sont indiqués votre nombre d'habitants. Pour chaque population, 1 ressource de nourriture sera régulièrement consommée.\n\nPlacez une cabane de chasse sur une case où se trouve du gibier (icône de cerf) pour produire de la viande.\n\nS'il n'y a plus de gibier disponible, vous pouvez aussi placer des zones de cueillette dans l'onglet Récolte pour obtenir des plantes comestibles.",
     "check": "branch_hut >= 3"
   },
   {
@@ -28,7 +28,7 @@
     "title": "La roche",
     "flavorText": "Les chasseurs ramènent de quoi manger, mais vos outils restent rudimentaires. Pour construire davantage, il va falloir extraire et utiliser la pierre.",
     "image": "/images/tutorial/stone_quarry.png",
-    "explanation": "Attendez d'avoir les coquillages nécessaires et construisez une carrière de pierre. Ce bâtiment ne peut être placé que près des montagnes : cherchez un terrain adjacent à une zone rocheuse grise.",
+    "explanation": "Accumulez assez de coquillages, puis sélectionnez la 'Carrière de pierre' dans le menu.\n\nPlacez-la uniquement à côté des montagnes.\n\nElle produit régulièrement de la pierre brute, indispensable à votre village, mais demande un entretien en or.",
     "check": "hunting_traps >= 1"
   },
   {
@@ -36,7 +36,8 @@
     "title": "Le dépôt",
     "flavorText": "La pierre s’accumule, mais sans lieu de stockage, le travail ralentit. Une tribu qui construit doit aussi savoir s’organiser.",
     "image": "/images/tutorial/storage_shelter.png",
-    "explanation": "Construisez un abri de stockage près de votre campement. C’est autour de cet abri que vous pourrez ensuite implanter vos bâtiments industriels. Commencez par placer un atelier de tailleur de pierre à côté de cet abri, et placez une fosse de tanage quand vous aurez créé suffisament d'outils.",
+    "explanation": "Placez un abri de stockage dans une zone dégagée.\n\nIl ne génère pas de ressources, mais permet de débloquer les bâtiments industriels, qui doivent être construits à proximité immédiate.\n\nCommencez par un atelier de tailleur de pierre qui produira des outils, puis ajoutez une fosse de tannage pour produire du cuir.",
+
     "check": "stone_quarry >= 1"
   },
   {
@@ -44,7 +45,7 @@
     "title": "L'entretien",
     "flavorText": "Le village entre dans une nouvelle phase. Les premiers ateliers transforment les ressources, et l’organisation du travail devient essentielle.",
     "image": "/images/tutorial/economy_warning.png",
-    "explanation": "La plupart des bâtiments coûtent des coquillages en entretien et produisent des ressources. Si un bâtiment affiche une icône de danger, c’est qu’il manque de main d'œuvre pour fonctionner. Avancez dans la construction de votre village jusqu'à pouvoir construire votre premier abri en peau.",
+    "explanation": "Une icône de danger apparaît sur un bâtiment lorsqu’il manque de main-d’œuvre, c’est-à-dire qu’il n’y a pas assez d’habitants pour y travailler.\n\nPour remédier à cela, augmentez votre population en construisant des habitations autour du feu de camp.\n\nContinuez jusqu’à pouvoir bâtir un abri en peaux, plus grand et plus efficace.",
     "check": "stonecutter >= 1 AND tanning_pit >= 1"
   },
   {
@@ -52,7 +53,7 @@
     "title": "La liberté",
     "flavorText": "Avec un toit, de la nourriture et des outils, vos gens ne pensent plus seulement à survivre. Le village peut maintenant se développer selon votre vision.",
     "image": "/images/tutorial/faith_intro.png",
-    "explanation": "Vous êtes désormais libre de bâtir comme bon vous semble. Certains bâtiments, comme le feu de camp ou les monuments religieux, produisent de la foi. Cette ressource vous sera précieuse pour progresser vers de nouvelles ères. Avancez jusqu'à apporter la pierre des savoirs à votre tribu.",
+    "explanation": "Vous êtes désormais libre de bâtir comme bon vous semble. Certains bâtiments, comme le feu de camp ou les monuments religieux, produisent de la foi.\n\nLa foi est une ressource essentielle pour ériger les bâtiments du savoir, qui ouvrent l’accès à de nouvelles constructions.\n\nAvancez dans votre développement jusqu’à pouvoir construire une ferme primitive, garantissant la prospérité de votre tribu.",
     "check": "leather_shelter >= 1"
   },
   {

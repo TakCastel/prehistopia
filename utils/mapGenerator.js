@@ -35,6 +35,7 @@ function generateClassicMap(cols, rows) {
   generateRiver(newMap, cols, rows, centerX);
   generateMountainsAndHills(newMap, cols, rows);
   generateTrees(newMap, cols, rows);
+  placeWildlife(newMap, 3); // pour classic
 
   return newMap;
 }
@@ -200,6 +201,8 @@ function generateDesertMap(cols, rows) {
     }
   }
 
+  placeWildlife(map, 2); // pour desert
+
   return map;
 }
 
@@ -273,7 +276,28 @@ function generateSnowMap(cols, rows) {
     }
   }
 
+  placeWildlife(map, 5); // pour snow
+
   return map;
+}
+
+function placeWildlife(map, count = 5) {
+  const grassCells = [];
+
+  for (let y = 0; y < map.length; y++) {
+    for (let x = 0; x < map[y].length; x++) {
+      const cell = map[y][x];
+      if (cell.terrainType === "grass" && !cell.building) {
+        grassCells.push({ x, y });
+      }
+    }
+  }
+
+  const selected = grassCells.sort(() => Math.random() - 0.5).slice(0, count);
+
+  for (const { x, y } of selected) {
+    map[y][x].building = "wildlife";
+  }
 }
 
 export {

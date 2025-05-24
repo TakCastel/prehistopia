@@ -4,24 +4,34 @@
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
   >
     <div
-      class="bg-[#FFF9EE] max-w-md w-full p-6 rounded-lg shadow-xl border border-[#D9C2A6] relative text-[#4B3A29] flex flex-col items-stretch overflow-y-auto max-h-[80vh]"
+      class="bg-[#FFF9EE] max-w-md w-full p-6 rounded-lg shadow-xl border border-[#D9C2A6] relative text-[#4B3A29] flex flex-col items-stretch"
+      style="max-height: 80vh"
     >
-      <h2 class="text-2xl font-bold mb-2">{{ currentStep.title }}</h2>
-      <p class="text-sm italic mb-4">{{ currentStep.flavorText }}</p>
-
+      <!-- Zone scrollable -->
       <div
-        class="w-full min-h-40 aspect-video overflow-hidden rounded border border-[#CBB393] mb-4"
+        class="overflow-y-auto pr-3 custom-scrollbar"
+        style="max-height: calc(80vh - 100px)"
       >
-        <img
-          :src="currentStep.image"
-          alt="Illustration"
-          class="w-full h-full object-cover"
-        />
+        <h2 class="text-2xl font-bold mb-2">{{ currentStep.title }}</h2>
+        <p class="text-sm italic mb-4">{{ currentStep.flavorText }}</p>
+
+        <div
+          class="w-full min-h-40 aspect-video overflow-hidden rounded border border-[#CBB393] mb-4"
+        >
+          <img
+            :src="currentStep.image"
+            alt="Illustration"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <p class="text-base whitespace-pre-line mb-4">
+          {{ currentStep.explanation }}
+        </p>
       </div>
 
-      <p class="text-base mb-6">{{ currentStep.explanation }}</p>
-
-      <div class="flex justify-between gap-4 mt-auto pt-4">
+      <!-- Boutons toujours visibles -->
+      <div class="flex justify-between gap-4 pt-4">
         <button
           class="bg-[#E9DCCF] text-[#4E3B31] py-2 px-4 rounded border border-[#3B2A21] hover:brightness-105 transition w-1/2"
           @click="skipAllTutorials"
@@ -37,6 +47,7 @@
         </button>
       </div>
 
+      <!-- Bouton de fermeture -->
       <button
         class="absolute top-2 right-2 text-sm text-gray-500 hover:text-black"
         @click="dismissCurrentStep"
@@ -181,3 +192,32 @@ watch(currentStep, (step) => {
   }
 });
 </script>
+
+<style scoped>
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #cbb393 #fff9ee;
+}
+
+/* Chrome, Safari, Edge */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  background: #fff9ee;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #fff9ee;
+  border-left: 1px solid #d9c2a6;
+  border-radius: 0 8px 8px 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbb393;
+  border-radius: 8px;
+  border: 2px solid #fff9ee;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #a57f3b;
+}
+</style>
