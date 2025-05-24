@@ -61,7 +61,7 @@
             "meat": 3,
             "gold": -5
           },
-          "description": "Produit de la viande. Nécessite une hutte. Requis pour la fosse de tannage."
+          "description": "Produit de la viande. Doit être placée sur une case où se trouve du gibier (icône de cerf). Requiert une hutte pour être débloquée."
         }
       ]
     },
