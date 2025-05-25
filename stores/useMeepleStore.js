@@ -82,19 +82,16 @@ export const useMeepleStore = defineStore("meeple", () => {
       const distance = Math.sqrt(dx * dx + dy * dy);
       const step = meeple.speed || 0.025;
 
+      if (Math.abs(dx) > 0.01) {
+        meeple.facing = dx > 0 ? "right" : "left";
+      }
+
       if (distance < step) {
         meeple.drawX = meeple.x;
         meeple.drawY = meeple.y;
       } else {
         meeple.drawX += (dx / distance) * step;
         meeple.drawY += (dy / distance) * step;
-
-        // 👇 Mise à jour du facing pendant le déplacement
-        if (dx < 0) {
-          meeple.facing = "left";
-        } else if (dx > 0) {
-          meeple.facing = "right";
-        }
       }
     }
   }

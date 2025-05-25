@@ -99,6 +99,15 @@ export const useMapStore = defineStore(
         { name: "meeple_h", src: "/images/meeple_h.png" },
         { name: "meeple_f", src: "/images/meeple_f.png" },
         { name: "wildlife", src: "/images/wildlife.png" },
+        { name: "unremovable_classic", src: "/images/unremovable_classic.png" },
+        {
+          name: "unremovable_desert",
+          src: "/images/unremovable_desert.png",
+        },
+        {
+          name: "unremovable_snow",
+          src: "/images/unremovable_snow.png",
+        },
       ]);
 
       await loadMap(type);
@@ -296,6 +305,20 @@ export const useMapStore = defineStore(
 
       const cell = map.value[gridY][gridX];
 
+      // 🪨 Bloc inconstructible spécial
+      if (cell?.building === "unremovable") {
+        const spriteName =
+          {
+            classic: "unremovable_classic",
+            desert: "unremovable_desert",
+            snow: "unremovable_snow",
+          }[mapType.value] || "unremovable";
+
+        drawImageAt(ctx, spriteName, x, y + 4, "normal");
+        return;
+      }
+
+      // 🏔️ Affichage montagne (terrain)
       if (cell?.terrainType === "mountain") {
         const sprite =
           mapType.value === "desert"
@@ -304,8 +327,7 @@ export const useMapStore = defineStore(
             ? "mountain"
             : "mountain";
 
-        const yOffset = sprite === "sanddune" ? 6 : 0; // ⬇️ décale de 4px si dune
-
+        const yOffset = sprite === "sanddune" ? 6 : 0;
         drawImageAt(ctx, sprite, x, y + yOffset, "large");
       }
 
@@ -371,7 +393,7 @@ export const useMapStore = defineStore(
       ctx.save();
       ctx.globalAlpha = alpha;
 
-      if (name === "meeple" && flip) {
+      if (flip) {
         ctx.scale(-1, 1);
         ctx.drawImage(
           img,
@@ -442,16 +464,19 @@ export const useMapStore = defineStore(
             return false;
           }
 
+          if (cell.building === "unremovable") {
+            useAlertStore().push("error", "Impossible de détruire ça.");
+            return false;
+          }
+
           console.log(
             `🛠️ Removed building at [${x}, ${y}] for ${bulldozerCost} gold.`
           );
 
-          if (cell.building === "tree") {
+          const treeTypes = ["tree", "palmtree", "pinetree"];
+          if (treeTypes.includes(cell.building)) {
             const rewardGold = 25;
             resourceStore.addGold(rewardGold);
-            console.log(
-              `🌳 Chopped tree at [${x}, ${y}]. +${rewardGold} gold!`
-            );
           }
 
           // 🦌 Si on supprime une cabane de chasse, on remet les animaux
@@ -518,6 +543,34 @@ export const useMapStore = defineStore(
       cell.building = selectedBuilding.value;
       map.value[y][x] = { ...cell }; // ✅ force la réactivité
 
+      if (selectedBuilding.value === "campfire") {
+        const treeTypes = ["tree", "palmtree", "pinetree"];
+        let rewardCount = 0;
+
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            if (dx === 0 && dy === 0) continue;
+            const cellAround = map.value[y + dy]?.[x + dx];
+            if (!cellAround) continue;
+
+            if (treeTypes.includes(cellAround.building)) {
+              cellAround.building = null;
+              rewardCount++;
+            }
+          }
+        }
+
+        const rewardPerTree = 25;
+        if (rewardCount > 0) {
+          resourceStore.addGold(rewardCount * rewardPerTree);
+          console.log(
+            `🔥 Arbres brûlés autour du feu : ${rewardCount} → +${
+              rewardCount * rewardPerTree
+            } or`
+          );
+        }
+      }
+
       // Libère la sélection uniquement pour les bâtiments non-logement
       const housingBuildings = [
         "campfire",
@@ -553,6 +606,8 @@ export const useMapStore = defineStore(
         return false;
       }
 
+      if (cell.building === "unremovable") return false;
+
       const uniqueBuildings = ["knowledge_stone", "experimental_lab"];
       if (uniqueBuildings.includes(b)) {
         const alreadyPlaced = map.value.some((row) =>
@@ -568,6 +623,21 @@ export const useMapStore = defineStore(
           const neighbor = map.value[y + dy]?.[x + dx];
           if (neighbor?.building === "campfire") {
             return false;
+          }
+        }
+      }
+
+      if (selectedBuilding.value === "campfire") {
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            if (dx === 0 && dy === 0) continue;
+            const neighbor = map.value[y + dy]?.[x + dx];
+            if (
+              neighbor?.building &&
+              !["tree", "palmtree", "pinetree"].includes(neighbor.building)
+            ) {
+              return false;
+            }
           }
         }
       }

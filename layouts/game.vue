@@ -7,6 +7,7 @@
       <div class="flex items-center gap-4">
         <h1 class="text-lg font-bold">Prehistopia</h1>
         <RestartButton />
+        <StatsPanel />
       </div>
 
       <ResourceDisplay />

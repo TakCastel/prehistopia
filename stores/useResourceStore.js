@@ -90,37 +90,27 @@ export const useResourceStore = defineStore(
 
         consumptionLog[chosen] = (consumptionLog[chosen] || 0) + 1;
       }
-
-      if (Object.keys(consumptionLog).length > 0) {
-        console.log(
-          "🍽️ Nourriture consommée par la population :",
-          consumptionLog
-        );
-      }
     }
+
+    let incomeTimerId = null;
 
     function startResourceIncome(getMapFn) {
       console.log("🚀 startResourceIncome called");
 
-      if (incomeStarted) {
-        console.warn("⚠️ Income generation already started.");
-        return;
+      if (incomeTimerId !== null) {
+        clearInterval(incomeTimerId); // 🔁 annule l’ancien si existant
       }
 
-      incomeStarted = true;
-
-      setInterval(() => {
-        const map = getMapFn(); // 👈 appelée à chaque tick
-        if (!Array.isArray(map) || map.length === 0) {
-          console.warn("⚠️ Map is empty or not ready.");
-          return;
-        }
+      incomeTimerId = setInterval(() => {
+        const map = getMapFn();
+        if (!Array.isArray(map) || map.length === 0) return;
 
         const totalIncome = {};
         const availablePop = population.value;
         let assignedPopulation = 0;
 
         inactiveBuildings.value = {};
+
         const popDependentBuildings = [
           "stone_quarry",
           "primitive_farm",
@@ -133,7 +123,6 @@ export const useResourceStore = defineStore(
           "stonecutter",
         ];
 
-        // 🔁 Étape 1 : collecte des bâtiments avec besoin de population
         const popRequiredCells = [];
 
         for (let y = 0; y < map.length; y++) {
@@ -162,11 +151,9 @@ export const useResourceStore = defineStore(
           }
         }
 
-        // 🔀 Étape 2 : mélange aléatoire et activation partielle
         const shuffled = [...popRequiredCells].sort(() => Math.random() - 0.5);
-        for (let i = 0; i < shuffled.length; i++) {
+        for (const cell of shuffled) {
           if (assignedPopulation < availablePop) {
-            const cell = shuffled[i];
             cell.inactive = false;
             const income = getIncomeForBuilding(cell.building);
             for (const [resource, amount] of Object.entries(income)) {
@@ -174,27 +161,31 @@ export const useResourceStore = defineStore(
             }
             assignedPopulation++;
           } else {
-            shuffled[i].inactive = true;
+            cell.inactive = true;
           }
         }
 
-        // 💰 Applique les revenus
         for (const [resource, amount] of Object.entries(totalIncome)) {
           if (typeof resourceStore[resource]?.value !== "undefined") {
             resourceStore[resource].value += amount;
-          } else {
-            console.warn(`⚠️ Resource "${resource}" not found in store.`);
           }
         }
 
         const canvas = document.querySelector("canvas");
         if (canvas) {
           const mapStore = useMapStore();
-          mapStore.draw(canvas);
+          mapStore.draw(canvas); // ❗️Possiblement lourd aussi
         }
 
         consumeRandomResources();
       }, incomeInterval);
+    }
+
+    function stopResourceIncome() {
+      if (incomeTimerId !== null) {
+        clearInterval(incomeTimerId);
+        incomeTimerId = null;
+      }
     }
 
     function updatePopulation(mapRef) {
@@ -223,8 +214,14 @@ export const useResourceStore = defineStore(
     let famineTimer = null;
     let houseDestructionInterval = null;
 
+    let foodWatcherStop = null;
+
     function monitorFoodCrisis(mapRef) {
-      watch(
+      if (foodWatcherStop) {
+        foodWatcherStop(); // 👈 désactive l'ancien watcher s'il existe
+      }
+
+      foodWatcherStop = watch(
         () => ({
           totalFood:
             meat.value + roots.value + wheat.value + medicinalHerbs.value,
@@ -248,7 +245,6 @@ export const useResourceStore = defineStore(
               clearInterval(famineTimer);
               famineTimer = null;
             }
-
             if (houseDestructionInterval) {
               clearInterval(houseDestructionInterval);
               houseDestructionInterval = null;
@@ -294,6 +290,17 @@ export const useResourceStore = defineStore(
       mapStore.draw(document.querySelector("canvas"));
 
       useAlertStore().push("error", "Un foyer s’est vidé.");
+    }
+
+    function cleanup() {
+      stopResourceIncome();
+      if (famineTimer) clearInterval(famineTimer);
+      if (houseDestructionInterval) clearInterval(houseDestructionInterval);
+      if (foodWatcherStop) foodWatcherStop();
+
+      famineTimer = null;
+      houseDestructionInterval = null;
+      foodWatcherStop = null;
     }
 
     const resourceStore = {
